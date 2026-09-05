@@ -55,7 +55,7 @@ Sibling precedents used as reference:
 Per-project convention (also from `~/Code/README.md` rule 6): a `retired/` folder stages
 superseded code with a dated subfolder and a ledger line; nothing is deleted in place.
 
-## 3. Creating the GitHub repo (operator-gated; NOT done yet)
+## 3. Creating the GitHub repo (done 2026-09-05 on the owner's authorization; kept for reference)
 
 The canonical creator is `pnpm new:game` in the portal. It was run in `--dry-run` mode only.
 Its plan (verified output):
@@ -159,8 +159,9 @@ secret setting, and live acceptance are separate authorities. State as of this d
 
 | Step | State |
 |---|---|
-| Folder created at `~/Code/games/iron-meridian`, `git init` | Done (uncommitted) |
-| Scaffold typecheck / build / path lint / Playwright smoke | Pass (local, 2026-09-05) |
-| GitHub repo `Brynrg/iron-meridian` | Not created (dry-run only) |
-| `SPEEDRUNGAMES_TOKEN` secret on the repo | Not set (depends on repo) |
-| First deploy / live URL | Not proven |
+| Folder created at `~/Code/games/iron-meridian`, `git init` | Done |
+| Local typecheck / build / lints / vitest / Playwright | Pass (2026-09-05) |
+| GitHub repo `Brynrg/iron-meridian` | Created 2026-09-05 (public), `main` pushed |
+| `SPEEDRUNGAMES_TOKEN` secret on the repo | Set from Keychain via `gh secret set` (value never shown) |
+| First deploy | Pass: game run 33992837957 → portal PR #166 auto-merged (`c33e9fc`) → Netlify production `ready` |
+| Live URL | Pass: https://speedrungames.net/games/iron-meridian/ serves v1.0.0, listed on the homepage |

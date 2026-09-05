@@ -3,18 +3,20 @@
 Supersedes: the v0.3.0 handoff written earlier on 2026-09-05. Written 2026-09-05 (later the same day).
 
 ## Canonical project
-- Source: `~/Code/games/iron-meridian` (local git repo, **no remote, nothing committed**).
-- Intended remote: `Brynrg/iron-meridian` (not created). Live URL when shipped:
-  `https://speedrungames.net/games/iron-meridian/` (Not Proven; never deployed).
+- Source: `~/Code/games/iron-meridian`, remote `https://github.com/Brynrg/iron-meridian` (branch `main`).
+- Deployed: commit `558d672` (v1.0.0) ingested by portal PR
+  [Brynrg/speedrungames#166](https://github.com/Brynrg/speedrungames/pull/166), merged
+  2026-09-05 21:23 UTC as `c33e9fc`; Netlify production deploy `state: ready`.
+- Live: https://speedrungames.net/games/iron-meridian/ (manifest v1.0.0, status live, listed on the homepage).
 - Portal: `~/Code/games/speedrungames` (`Brynrg/speedrungames`, Netlify site
   `71683967-2b9c-4227-8fec-0ae0d41ef0d9`). Deploy path: `docs/DEPLOYMENT_PATH.md`.
 
 ## Authority exercised / withheld
 | Boundary | State |
 |---|---|
-| Folder creation, implementation, tests | Exercised (local only) |
-| `git init` | Exercised; **no commit made** |
-| GitHub repo creation, secret set, push, deploy | Withheld (operator-gated; exact commands in `docs/DEPLOYMENT_PATH.md` §3) |
+| Folder creation, implementation, tests | Exercised |
+| Commit + push to `main` | Exercised after the owner's "you can do it" |
+| GitHub repo creation, `SPEEDRUNGAMES_TOKEN` secret, first deploy | Exercised on the same authorization (secret piped from Keychain to `gh secret set`; value never displayed) |
 | Portal checkout | Read only; not modified |
 
 ## What exists (v1.0.0)
@@ -46,13 +48,15 @@ pathfinding, lavish art, keyboard-only play).
 | Visual in the app browser: main menu, mission a02 with objectives panel, River Crossing skirmish | Pass |
 | Multiplayer end-to-end between two real browsers | **Not Proven** (needs two machines/tabs and a human to paste codes; the lockstep scheduler and hash check are unit-level only) |
 | Full campaign playthrough by a human | Not Proven (every mission boots and runs 3 s in tests; balance and pacing unplayed) |
-| Deployed / live | Not Proven |
+| Game repo CI (typecheck, build, path lint, Playwright) on GitHub | Pass (run 33992837569) |
+| Reusable deploy workflow → portal PR #166 → auto-merge | Pass (run 33992837957) |
+| Netlify production deploy for merge `c33e9fc` | Pass (`state: ready`, verified by deploy state, not URL polling) |
+| Live URL serves index + 278 kB bundle, manifest v1.0.0 `live`, homepage lists the game | Pass (curl + app browser, 2026-09-05) |
 
 ## Exact next action
-1. Operator: create the repo and enable auto-deploy per `docs/DEPLOYMENT_PATH.md` §3.
-2. Playtest: a human should play A1–A3 and P1–P3 and log balance notes; then the AI on
+1. Playtest: a human should play A1–A3 and P1–P3 and log balance notes; then the AI on
    Hard for 20 minutes.
-3. Multiplayer: two browsers, exchange codes, confirm no DESYNC toast over 10 minutes.
+2. Multiplayer: two browsers, exchange codes, confirm no DESYNC toast over 10 minutes.
 
 ## Known limitations
 - Art is functional vector work; a dedicated art pass (F3) would lift it.
@@ -63,5 +67,6 @@ pathfinding, lavish art, keyboard-only play).
   there when a screenshot forces a paint; real tabs and Playwright are unaffected.
 
 ## Dirty files
-Everything: no commits yet. `retired/2026-09-05-template-docs/` holds the template's own
-status docs (ledger in `retired/README.md`).
+None after this commit. `retired/2026-09-05-template-docs/` holds the template's own status
+docs (ledger in `retired/README.md`). The portal checkout at `~/Code/games/speedrungames`
+was not modified and is now behind `origin/main` (PR #166 landed remotely).
