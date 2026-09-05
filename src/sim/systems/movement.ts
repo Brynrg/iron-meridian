@@ -21,6 +21,18 @@ export function runMovement(state: SimState): void {
     const def = unitDef(state, a.type);
     if (!def) continue;
     resolveOrderGoal(state, a);
+    if (a.loco !== "air" && a.loco !== "naval" && (state.tick + a.id) % 10 === 0) {
+      const cx = worldToTile(a.x);
+      const cy = worldToTile(a.y);
+      if (!isPassable(m, cx, cy, a.loco, -1, state.players[a.owner]?.team ?? -1)) {
+        const np = nearestPassable(m, cx, cy, a.loco, 6);
+        if (np) {
+          a.x = tileToWorldCenter(np[0]);
+          a.y = tileToWorldCenter(np[1]);
+          a.path = null;
+        }
+      }
+    }
     if (!a.moveGoal) continue;
 
     // Aircraft fly straight.
@@ -254,7 +266,7 @@ function applyContact(state: SimState, a: Actor, t: Actor): void {
         } else if (sd.superweapon) {
           const sw = victim?.superweapons[sd.superweapon];
           if (sw) sw.charge = 0;
-        } else if (sd.produces.includes("ship")) {
+        } else if (sd.produces.includes("ship") && me) {
           me.superweapons.sonar = { charge: 0, ready: true };
         }
         state.events.push({ kind: "eva", cue: "buildingInfiltrated", player: t.owner });

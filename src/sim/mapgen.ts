@@ -66,6 +66,12 @@ export function generateMap(opts: MapGenOptions): MapData {
   m.starts = corners.slice(0, Math.max(2, Math.min(4, opts.players))).map(([x, y]) => ({ x, y }));
 
   const clearRadius = 9; // keep bases buildable
+  // Water threshold from the noise distribution so `waterAmount` maps to coverage
+  // (0 -> none, 1 -> ~35% of cells) instead of depending on the noise's spread.
+  const sortedN3 = Array.from(n3).sort((a, b) => a - b);
+  const waterFrac = Math.max(0, Math.min(0.35, opts.waterAmount * 0.35));
+  const waterCut = waterFrac > 0 ? (sortedN3[Math.floor(waterFrac * (sortedN3.length - 1))] as number) : -1;
+  const beachCut = waterFrac > 0 ? (sortedN3[Math.min(sortedN3.length - 1, Math.floor((waterFrac + 0.03) * (sortedN3.length - 1)))] as number) : -1;
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -79,8 +85,8 @@ export function generateMap(opts: MapGenOptions): MapData {
       if (edge) t = Terrain.Cliff;
       else if (!nearStart) {
         // Central lake / rivers from low-frequency noise.
-        if (c < 0.22 * opts.waterAmount + 0.08) t = Terrain.Water;
-        else if (c < 0.22 * opts.waterAmount + 0.11) t = Terrain.Beach;
+        if (c <= waterCut) t = Terrain.Water;
+        else if (c <= beachCut) t = Terrain.Beach;
         else if (a > 0.78) t = Terrain.Cliff;
         else if (a > 0.72) t = Terrain.Rock;
         else if (b > 0.74 && a < 0.5) t = Terrain.Tree;

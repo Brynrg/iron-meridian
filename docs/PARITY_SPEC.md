@@ -141,6 +141,7 @@ Transport (Pact).
 | I2 | Unit tests (vitest) on every sim system; determinism replay test | ☑ (16 vitest tests: rules, determinism, economy, power, combat, AI, save/load, RLE, missions ×3, maps ×2) |
 | I3 | Liveness gates: Playwright scenarios prove player-visible promises per milestone | ☑ (`tests/live/skirmish.spec.ts`) |
 | I4 | `ASSETS.md`, `expectedAssets` in manifest once sprite atlases exist | ☑ (`ASSETS.md`: no binary assets shipped) |
+| I6 | Headless balance harness + analyzer (`docs/SIMULATION.md`, `docs/BALANCE_REPORT.md`) | ☑ (43-game matrix, deterministic per seed; found and fixed 9 AI/economy defects on 2026-09-05) |
 | I5 | Keyboard-only playable; remappable hotkeys | ◐ (every hotkey rebindable; mouse still required for selection) |
 
 ## Milestones (each ends with a deployable version and a liveness gate)

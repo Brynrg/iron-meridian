@@ -2,7 +2,8 @@
 // refinery -> unload into credits (bounded by storage) -> repeat.
 
 import { LEPTONS_PER_CELL, tileToWorldCenter, worldToTile } from "../coords";
-import { idx, inBounds } from "../map";
+import { idx, inBounds, isPassable } from "../map";
+import { findPath } from "../pathfind";
 import { emit, unitDef } from "../state";
 import type { Actor, SimState } from "../types";
 
@@ -27,9 +28,24 @@ export function runHarvest(state: SimState): void {
           break;
         }
         const pref = a.order.kind === "harvest" && a.order.tx !== undefined ? [a.order.tx, a.order.ty as number] : h.fieldX >= 0 ? [h.fieldX, h.fieldY] : null;
-        const cell = findOre(state, pref ? tileToWorldCenter(pref[0] as number) : a.x, pref ? tileToWorldCenter(pref[1] as number) : a.y, 14) ?? findOre(state, a.x, a.y, 60);
+        const avoid = (h.avoid ??= []);
+        let cell: [number, number] | null = null;
+        for (let attempt = 0; attempt < 4 && !cell; attempt++) {
+          const c = findOre(state, pref ? tileToWorldCenter(pref[0] as number) : a.x, pref ? tileToWorldCenter(pref[1] as number) : a.y, 14, -1, avoid) ?? findOre(state, a.x, a.y, 60, a.owner, avoid);
+          if (!c) break;
+          // Reachability: an unreachable field is remembered and skipped.
+          const path = findPath(state.map, worldToTile(a.x), worldToTile(a.y), c[0], c[1], a.loco, a.id, state.players[a.owner]?.team ?? -1);
+          const last = path[path.length - 1];
+          const ok = (worldToTile(a.x) === c[0] && worldToTile(a.y) === c[1]) || (!!last && Math.abs(last[0] - c[0]) <= 1 && Math.abs(last[1] - c[1]) <= 1);
+          if (ok) cell = c;
+          else {
+            avoid.push(idx(state.map, c[0], c[1]));
+            if (avoid.length > 24) avoid.shift();
+          }
+        }
         if (!cell) {
           if (load > 0) h.state = "toRefinery";
+          else if (state.tick % 200 === 0) avoid.length = 0; // re-check occasionally; ore regrows and bases fall
           break;
         }
         h.fieldX = cell[0];
@@ -47,7 +63,8 @@ export function runHarvest(state: SimState): void {
           a.path = null;
           h.state = "harvesting";
         } else if (!a.moveGoal) {
-          // Movement gave up (unreachable): pick another field.
+          // Movement gave up (unreachable): remember and pick another field.
+          (h.avoid ??= []).push(idx(state.map, h.fieldX, h.fieldY));
           h.fieldX = -1;
           h.state = "idle";
         }
@@ -90,7 +107,9 @@ export function runHarvest(state: SimState): void {
         }
         h.refinery = ref.id;
         const dock = dockPoint(state, ref);
-        if (Math.hypot(dock.x - a.x, dock.y - a.y) <= LEPTONS_PER_CELL * 0.7) {
+        const dockBlocked = !isPassable(state.map, worldToTile(dock.x), worldToTile(dock.y), a.loco, a.id);
+        const reach = dockBlocked ? LEPTONS_PER_CELL * 1.6 : LEPTONS_PER_CELL * 0.7;
+        if (Math.hypot(dock.x - a.x, dock.y - a.y) <= reach) {
           a.moveGoal = null;
           a.path = null;
           a.x = dock.x;
@@ -134,12 +153,21 @@ export function runHarvest(state: SimState): void {
 }
 
 /** Nearest ore-bearing cell within `r` cells of a world point, or null. */
-export function findOre(state: SimState, x: number, y: number, r: number): [number, number] | null {
+export function findOre(state: SimState, x: number, y: number, r: number, avoidEnemiesOf = -1, avoid: number[] = []): [number, number] | null {
   const m = state.map;
   const cx = worldToTile(x);
   const cy = worldToTile(y);
   let best: [number, number] | null = null;
   let bestD = Infinity;
+  // Long-range searches skip ore parked under enemy guns (within 8 cells of an enemy structure).
+  const hostile: Array<[number, number]> = [];
+  if (avoidEnemiesOf >= 0) {
+    for (const s of state.actorList) {
+      if (s.kind !== "structure" || s.owner < 0 || s.owner === avoidEnemiesOf) continue;
+      if (state.players[s.owner]?.team === state.players[avoidEnemiesOf]?.team) continue;
+      hostile.push([worldToTile(s.x), worldToTile(s.y)]);
+    }
+  }
   for (let dy = -r; dy <= r; dy++) {
     for (let dx = -r; dx <= r; dx++) {
       const tx = cx + dx;
@@ -148,6 +176,8 @@ export function findOre(state: SimState, x: number, y: number, r: number): [numb
       const i = idx(m, tx, ty);
       if ((m.ore[i] as number) <= 0) continue;
       if ((m.occupancy[i] as number) !== -1) continue;
+      if (avoid.length && avoid.includes(i)) continue;
+      if (hostile.length && hostile.some(([hx, hy]) => Math.abs(hx - tx) <= 8 && Math.abs(hy - ty) <= 8)) continue;
       const d = dx * dx + dy * dy - (m.gems[i] ? 4 : 0);
       if (d < bestD) {
         bestD = d;

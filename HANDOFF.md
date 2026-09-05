@@ -52,6 +52,17 @@ pathfinding, lavish art, keyboard-only play).
 | Reusable deploy workflow → portal PR #166 → auto-merge | Pass (run 33992837957) |
 | Netlify production deploy for merge `c33e9fc` | Pass (`state: ready`, verified by deploy state, not URL polling) |
 | Live URL serves index + 278 kB bundle, manifest v1.0.0 `live`, homepage lists the game | Pass (curl + app browser, 2026-09-05) |
+| Balance harness: 43 AI-vs-AI games, 25 game-minute cap, baseline vs final (`docs/BALANCE_REPORT.md`) | Pass (see report; 3 residual unfinished-kill anomalies documented) |
+
+## Simulation pass (2026-09-05, after deploy; local coder model used for drafting)
+`scripts/simulate.ts` (written by the local `code` role from an API brief, then corrected)
+runs a 43-game AI-vs-AI matrix; `scripts/analyze.mjs` summarises it. Baseline vs final is in
+`docs/BALANCE_REPORT.md`. Defects found and fixed by tracing anomalies: AI froze all
+production for 15 s after every hit; AI built over refinery docks (trucks boxed in);
+trucks looped on unreachable fields; water presets generated ~0% water; island detection
+started from occupied cells; unplaceable buildings retried forever; late-game wave threshold
+grew past reachable army sizes; AI bases sealed their own producers' exits; River Crossing
+ore was too small. Anomalies dropped from 10/43 games to 3/43 (all of one class, documented in the report).
 
 ## Exact next action
 1. Playtest: a human should play A1–A3 and P1–P3 and log balance notes; then the AI on

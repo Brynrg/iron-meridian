@@ -56,7 +56,7 @@ export interface Actor {
   target: number; // actor id or -1
   cooldown: number[]; // per weapon
   burstLeft: number[];
-  harvester: { cargo: number; gems: number; state: HarvestState; refinery: number; fieldX: number; fieldY: number } | null;
+  harvester: { cargo: number; gems: number; state: HarvestState; refinery: number; fieldX: number; fieldY: number; avoid: number[] } | null;
   cargo: number[]; // passenger ids
   inside: number; // transport id or -1
   prone: boolean;
@@ -141,6 +141,8 @@ export interface AiMemory {
   lastBaseAttackTick: number;
   buildOrderIdx: number;
   failedPlacements: number;
+  blocked: string[]; // structure types that could not be placed recently
+  blockedClearTick: number;
 }
 
 export type Command = { player: number } & (

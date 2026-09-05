@@ -15,3 +15,4 @@ blob-report/
 *.log
 .DS_Store
 Thumbs.db
+scripts/out/

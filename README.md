@@ -34,6 +34,8 @@ npm run dev          # http://localhost:5173
 ```bash
 npm run verify       # typecheck + relative-path lint + sim-purity lint + unit tests
 npm test             # Playwright smoke + liveness gates against the production build
+npx vite-node scripts/simulate.ts --quick   # headless AI-vs-AI balance matrix (see docs/SIMULATION.md)
+node scripts/analyze.mjs                    # summarise the newest simulation JSON
 ```
 
 ## Controls (classic layout, all rebindable in Options)

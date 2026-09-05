@@ -6,7 +6,7 @@ import { emit, removeActor, spawnStructure, spawnUnit, structDef, unitDef } from
 import type { FactionId, QueueKind } from "../data/schemas";
 import type { Command, GameOptions, SimState } from "./types";
 import type { PlayerSetup } from "./state";
-import { idx, inBounds } from "./map";
+import { idx, inBounds, isBuildable } from "./map";
 
 export interface Area {
   tx: number;
@@ -111,7 +111,12 @@ export function seedMission(state: SimState, def: MissionDef): void {
     const n = a.count ?? 1;
     for (let k = 0; k < n; k++) {
       if (structDef(state, a.type)) {
-        const s = spawnStructure(state, a.type, a.owner, a.tx + (k % 4) * 2, a.ty + Math.floor(k / 4) * 2, 1);
+        // Nudge scripted structures off water/cliffs/occupied cells so generated terrain never buries them.
+        const def = structDef(state, a.type)!;
+        const want: [number, number] = [a.tx + (k % 4) * 2, a.ty + Math.floor(k / 4) * 2];
+        const spot = findFootprint(state, def.footprint[0], def.footprint[1], want[0], want[1]);
+        if (!spot) continue;
+        const s = spawnStructure(state, a.type, a.owner, spot[0], spot[1], 1);
         if (a.owner >= 0 && a.type === "conyard") s.primary = false;
       } else if (unitDef(state, a.type)) {
         const u = spawnUnit(state, a.type, a.owner, tileToWorldCenter(a.tx + (k % 5)), tileToWorldCenter(a.ty + Math.floor(k / 5)), 16);
@@ -121,6 +126,22 @@ export function seedMission(state: SimState, def: MissionDef): void {
       }
     }
   }
+}
+
+function findFootprint(state: SimState, w: number, h: number, tx: number, ty: number): [number, number] | null {
+  for (let r = 0; r <= 4; r++) {
+    for (let dy = -r; dy <= r; dy++) {
+      for (let dx = -r; dx <= r; dx++) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+        const x = tx + dx;
+        const y = ty + dy;
+        let ok = true;
+        for (let yy = y; yy < y + h && ok; yy++) for (let xx = x; xx < x + w; xx++) if (!isBuildable(state.map, xx, yy)) { ok = false; break; }
+        if (ok) return [x, y];
+      }
+    }
+  }
+  return null;
 }
 
 function inArea(x: number, y: number, area: Area): boolean {
@@ -368,7 +389,7 @@ function applyAction(state: SimState, def: MissionDef, rt: MissionRuntime, act: 
       if (p && !p.ai) {
         p.isAI = true;
         p.difficulty = act.difficulty;
-        p.ai = { phase: 0, nextThinkTick: state.tick + 1, attackWaveAt: 0, rallyX: 0, rallyY: 0, targetX: -1, targetY: -1, attacking: false, lastBaseAttackTick: -100000, buildOrderIdx: 0, failedPlacements: 0 };
+        p.ai = { phase: 0, nextThinkTick: state.tick + 1, attackWaveAt: 0, rallyX: 0, rallyY: 0, targetX: -1, targetY: -1, attacking: false, lastBaseAttackTick: -100000, buildOrderIdx: 0, failedPlacements: 0, blocked: [], blockedClearTick: 0 };
       }
       break;
     }

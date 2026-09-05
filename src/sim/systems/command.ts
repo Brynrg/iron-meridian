@@ -3,7 +3,7 @@
 
 import { LEPTONS_PER_CELL, cellsToLeptons, tileToWorldCenter, worldToTile } from "../coords";
 import { nextInt } from "../rng";
-import { buildableTypes, canPlace, deployMcv, emit, getActor, isAlly, spawnStructure, spawnUnit, spend, structDef, unitDef } from "../state";
+import { buildableTypes, canPlace, deployMcv, emit, findExitCell, getActor, isAlly, spawnStructure, spawnUnit, spend, structDef, unitDef } from "../state";
 import { isPassable } from "../map";
 import type { Actor, Command, Order, SimState } from "../types";
 
@@ -205,9 +205,9 @@ export function runCommands(state: SimState, commands: Command[]): void {
         const s = spawnStructure(state, c.type, c.player, c.tx, c.ty, 0);
         if (sdef.refinery) {
           // A refinery ships with a free Ore Truck (classic behaviour).
-          const [ex, ey] = [c.tx + 1, c.ty + 3];
           const truck = state.rules.units.oretruck;
           if (truck) {
+            const [ex, ey] = findExitCell(state, s, "track");
             const t = spawnUnit(state, "oretruck", c.player, tileToWorldCenter(ex), tileToWorldCenter(ey));
             t.order = { kind: "harvest" };
           }
