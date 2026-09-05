@@ -1,0 +1,384 @@
+{
+  "rifle": {
+    "damage": 15,
+    "rof": 14,
+    "range": 4.0,
+    "projectile": "instant",
+    "warhead": "sa",
+    "sound": "rifle",
+    "inaccuracy": 0
+  },
+  "smg": {
+    "damage": 12,
+    "rof": 6,
+    "range": 3.5,
+    "projectile": "instant",
+    "warhead": "sa",
+    "sound": "smg"
+  },
+  "mg": {
+    "damage": 18,
+    "rof": 8,
+    "range": 4.5,
+    "projectile": "instant",
+    "warhead": "sa",
+    "sound": "mg"
+  },
+  "vulcan": {
+    "damage": 25,
+    "rof": 7,
+    "range": 4.5,
+    "projectile": "instant",
+    "warhead": "sa",
+    "sound": "mg"
+  },
+  "pistol": {
+    "damage": 60,
+    "rof": 8,
+    "range": 4.0,
+    "projectile": "instant",
+    "warhead": "hollow",
+    "sound": "pistol"
+  },
+  "dragon": {
+    "damage": 30,
+    "rof": 40,
+    "range": 5.0,
+    "projectile": "missile",
+    "speed": 90,
+    "warhead": "ap",
+    "targets": [
+      "ground",
+      "air"
+    ],
+    "sound": "rocket"
+  },
+  "grenade": {
+    "damage": 50,
+    "rof": 50,
+    "range": 4.0,
+    "projectile": "shell",
+    "speed": 60,
+    "warhead": "he",
+    "inaccuracy": 0.6,
+    "sound": "throw"
+  },
+  "flamer": {
+    "damage": 40,
+    "rof": 40,
+    "range": 3.0,
+    "projectile": "flame",
+    "speed": 50,
+    "warhead": "fire",
+    "sound": "flame"
+  },
+  "shock": {
+    "damage": 60,
+    "rof": 55,
+    "range": 5.0,
+    "projectile": "arc",
+    "warhead": "arc",
+    "sound": "zap"
+  },
+  "bite": {
+    "damage": 100,
+    "rof": 30,
+    "range": 1.2,
+    "projectile": "instant",
+    "warhead": "hollow",
+    "sound": "bite"
+  },
+  "medkit": {
+    "damage": -30,
+    "rof": 20,
+    "range": 1.5,
+    "projectile": "heal",
+    "warhead": "heal",
+    "sound": "heal"
+  },
+  "wrench": {
+    "damage": -40,
+    "rof": 20,
+    "range": 1.5,
+    "projectile": "heal",
+    "warhead": "wrench",
+    "sound": "wrench"
+  },
+  "c4": {
+    "damage": 2000,
+    "rof": 60,
+    "range": 1.0,
+    "projectile": "instant",
+    "warhead": "c4",
+    "sound": "c4"
+  },
+  "cannon25": {
+    "damage": 25,
+    "rof": 30,
+    "range": 4.75,
+    "projectile": "bullet",
+    "speed": 140,
+    "warhead": "ap",
+    "sound": "cannon_l"
+  },
+  "cannon90": {
+    "damage": 30,
+    "rof": 34,
+    "range": 4.75,
+    "projectile": "bullet",
+    "speed": 140,
+    "warhead": "ap",
+    "sound": "cannon"
+  },
+  "cannon105": {
+    "damage": 30,
+    "rof": 40,
+    "range": 4.75,
+    "projectile": "bullet",
+    "speed": 140,
+    "warhead": "ap",
+    "burst": 2,
+    "sound": "cannon"
+  },
+  "cannon120": {
+    "damage": 40,
+    "rof": 50,
+    "range": 4.75,
+    "projectile": "bullet",
+    "speed": 140,
+    "warhead": "ap",
+    "burst": 2,
+    "sound": "cannon_h"
+  },
+  "mammothMissile": {
+    "damage": 40,
+    "rof": 60,
+    "range": 5.0,
+    "projectile": "missile",
+    "speed": 90,
+    "warhead": "he",
+    "burst": 2,
+    "targets": [
+      "ground",
+      "air"
+    ],
+    "sound": "rocket"
+  },
+  "howitzer": {
+    "damage": 150,
+    "rof": 90,
+    "range": 8.0,
+    "minRange": 2.0,
+    "projectile": "shell",
+    "speed": 70,
+    "warhead": "he",
+    "inaccuracy": 0.8,
+    "sound": "artillery"
+  },
+  "rocketV": {
+    "damage": 150,
+    "rof": 110,
+    "range": 10.0,
+    "minRange": 3.0,
+    "projectile": "missile",
+    "speed": 80,
+    "warhead": "he",
+    "inaccuracy": 0.9,
+    "sound": "v2"
+  },
+  "arcTank": {
+    "damage": 120,
+    "rof": 70,
+    "range": 6.0,
+    "projectile": "arc",
+    "warhead": "arc",
+    "sound": "zap_big"
+  },
+  "arcTower": {
+    "damage": 200,
+    "rof": 90,
+    "range": 7.5,
+    "projectile": "arc",
+    "warhead": "arc",
+    "sound": "zap_big"
+  },
+  "flameTower": {
+    "damage": 60,
+    "rof": 45,
+    "range": 3.5,
+    "projectile": "flame",
+    "speed": 50,
+    "warhead": "fire",
+    "sound": "flame"
+  },
+  "flakGun": {
+    "damage": 30,
+    "rof": 25,
+    "range": 6.5,
+    "projectile": "bullet",
+    "speed": 160,
+    "warhead": "flak",
+    "burst": 2,
+    "targets": [
+      "air"
+    ],
+    "sound": "flak"
+  },
+  "flakTruck": {
+    "damage": 20,
+    "rof": 20,
+    "range": 5.0,
+    "projectile": "bullet",
+    "speed": 160,
+    "warhead": "flak",
+    "targets": [
+      "ground",
+      "air"
+    ],
+    "sound": "flak"
+  },
+  "sam": {
+    "damage": 60,
+    "rof": 50,
+    "range": 7.0,
+    "projectile": "missile",
+    "speed": 120,
+    "warhead": "he",
+    "burst": 2,
+    "targets": [
+      "air"
+    ],
+    "sound": "rocket"
+  },
+  "hellfire": {
+    "damage": 50,
+    "rof": 30,
+    "range": 5.0,
+    "projectile": "missile",
+    "speed": 100,
+    "warhead": "ap",
+    "burst": 2,
+    "sound": "rocket"
+  },
+  "chaingun": {
+    "damage": 25,
+    "rof": 5,
+    "range": 4.5,
+    "projectile": "instant",
+    "warhead": "sa",
+    "sound": "mg"
+  },
+  "napalm": {
+    "damage": 110,
+    "rof": 60,
+    "range": 4.0,
+    "projectile": "shell",
+    "speed": 90,
+    "warhead": "fire",
+    "inaccuracy": 0.5,
+    "sound": "bomb"
+  },
+  "maverick": {
+    "damage": 80,
+    "rof": 40,
+    "range": 5.0,
+    "projectile": "missile",
+    "speed": 110,
+    "warhead": "ap",
+    "burst": 2,
+    "sound": "rocket"
+  },
+  "naval5in": {
+    "damage": 70,
+    "rof": 50,
+    "range": 7.0,
+    "projectile": "shell",
+    "speed": 110,
+    "warhead": "he",
+    "sound": "cannon_h"
+  },
+  "naval8in": {
+    "damage": 200,
+    "rof": 90,
+    "range": 12.0,
+    "minRange": 3.0,
+    "projectile": "shell",
+    "speed": 110,
+    "warhead": "he",
+    "burst": 2,
+    "inaccuracy": 1.0,
+    "sound": "artillery"
+  },
+  "depthCharge": {
+    "damage": 60,
+    "rof": 60,
+    "range": 5.0,
+    "projectile": "shell",
+    "speed": 80,
+    "warhead": "he",
+    "targets": [
+      "naval"
+    ],
+    "sound": "splash"
+  },
+  "torpedo": {
+    "damage": 90,
+    "rof": 80,
+    "range": 7.0,
+    "projectile": "torpedo",
+    "speed": 60,
+    "warhead": "ap",
+    "targets": [
+      "naval"
+    ],
+    "sound": "torpedo"
+  },
+  "cruiseMissile": {
+    "damage": 150,
+    "rof": 100,
+    "range": 12.0,
+    "minRange": 3.0,
+    "projectile": "missile",
+    "speed": 100,
+    "warhead": "he",
+    "burst": 2,
+    "inaccuracy": 1.0,
+    "sound": "v2"
+  },
+  "stinger": {
+    "damage": 40,
+    "rof": 40,
+    "range": 6.0,
+    "projectile": "missile",
+    "speed": 120,
+    "warhead": "he",
+    "targets": [
+      "air"
+    ],
+    "sound": "rocket"
+  },
+  "demoCharge": {
+    "damage": 1000,
+    "rof": 60,
+    "range": 0.5,
+    "projectile": "instant",
+    "warhead": "demo",
+    "sound": "nuke_small"
+  },
+  "nukeBlast": {
+    "damage": 3000,
+    "rof": 1,
+    "range": 0,
+    "projectile": "instant",
+    "warhead": "nuke",
+    "sound": "nuke"
+  },
+  "mineBlast": {
+    "damage": 250,
+    "rof": 1,
+    "range": 0.7,
+    "projectile": "instant",
+    "warhead": "he",
+    "sound": "explosion"
+  }
+}

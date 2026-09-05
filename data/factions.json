@@ -1,0 +1,14 @@
+{
+  "alliance": {
+    "name": "Meridian Alliance",
+    "short": "Alliance",
+    "blurb": "A coalition of western republics. Fast vehicles, long-range naval guns, medics, spies, and the Phase Gate.",
+    "startingUnits": ["mcv", "rifle", "rifle", "rifle", "ranger"]
+  },
+  "pact": {
+    "name": "Ural Pact",
+    "short": "Pact",
+    "blurb": "An industrial eastern bloc. Heavy armour, arc weapons, attack dogs, airpower, and the atomic Missile Silo.",
+    "startingUnits": ["mcv", "rifle", "rifle", "grenadier", "heavytank"]
+  }
+}

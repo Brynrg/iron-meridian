@@ -1,0 +1,14 @@
+{
+  "sa": { "versus": { "none": 100, "wood": 30, "light": 45, "heavy": 15, "concrete": 10 }, "spread": 0 },
+  "he": { "versus": { "none": 90, "wood": 75, "light": 60, "heavy": 25, "concrete": 100 }, "spread": 0.6 },
+  "ap": { "versus": { "none": 30, "wood": 75, "light": 75, "heavy": 100, "concrete": 50 }, "spread": 0.2 },
+  "fire": { "versus": { "none": 90, "wood": 100, "light": 60, "heavy": 25, "concrete": 50 }, "spread": 0.5 },
+  "arc": { "versus": { "none": 100, "wood": 100, "light": 100, "heavy": 100, "concrete": 100 }, "spread": 0 },
+  "hollow": { "versus": { "none": 100, "wood": 0, "light": 0, "heavy": 0, "concrete": 0 }, "spread": 0, "infantryOnly": true },
+  "flak": { "versus": { "none": 100, "wood": 30, "light": 60, "heavy": 20, "concrete": 10 }, "spread": 0.4 },
+  "heal": { "versus": { "none": 100, "wood": 0, "light": 0, "heavy": 0, "concrete": 0 }, "spread": 0, "infantryOnly": true },
+  "wrench": { "versus": { "none": 0, "wood": 0, "light": 100, "heavy": 100, "concrete": 0 }, "spread": 0 },
+  "nuke": { "versus": { "none": 100, "wood": 100, "light": 100, "heavy": 100, "concrete": 100 }, "spread": 4 },
+  "demo": { "versus": { "none": 100, "wood": 100, "light": 100, "heavy": 100, "concrete": 100 }, "spread": 2 },
+  "c4": { "versus": { "none": 0, "wood": 100, "light": 0, "heavy": 0, "concrete": 100 }, "spread": 0 }
+}

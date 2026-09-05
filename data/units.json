@@ -1,0 +1,967 @@
+{
+  "rifle": {
+    "name": "Rifle Infantry",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 100,
+    "buildTime": 5,
+    "hp": 50,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 4,
+    "weapons": [
+      "rifle"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "crushable": true,
+    "desc": "Cheap, versatile line infantry."
+  },
+  "rocket": {
+    "name": "Rocket Soldier",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 300,
+    "buildTime": 8,
+    "hp": 45,
+    "armor": "none",
+    "speed": 2.0,
+    "loco": "foot",
+    "sight": 4,
+    "weapons": [
+      "dragon"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "crushable": true,
+    "desc": "Anti-armour and anti-air shoulder rockets."
+  },
+  "engineer": {
+    "name": "Engineer",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 25,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 3,
+    "prereq": [
+      "barracks"
+    ],
+    "engineer": true,
+    "crushable": true,
+    "desc": "Captures enemy structures and repairs bridges."
+  },
+  "grenadier": {
+    "name": "Grenadier",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 160,
+    "buildTime": 6,
+    "hp": 50,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 4,
+    "weapons": [
+      "grenade"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "crushable": true,
+    "desc": "Lobs grenades over walls; splash damage."
+  },
+  "flamer": {
+    "name": "Flamethrower",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 300,
+    "buildTime": 8,
+    "hp": 40,
+    "armor": "none",
+    "speed": 2.2,
+    "loco": "foot",
+    "sight": 4,
+    "weapons": [
+      "flamer"
+    ],
+    "prereq": [
+      "barracks",
+      "techcenter"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 3,
+    "crushable": true,
+    "desc": "Burns infantry and light structures."
+  },
+  "shock": {
+    "name": "Shock Trooper",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 500,
+    "buildTime": 12,
+    "hp": 60,
+    "armor": "none",
+    "speed": 1.8,
+    "loco": "foot",
+    "sight": 4,
+    "weapons": [
+      "shock"
+    ],
+    "prereq": [
+      "barracks",
+      "arctower"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 5,
+    "crushable": true,
+    "desc": "Portable arc projector; ignores armour."
+  },
+  "dog": {
+    "name": "Attack Dog",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 200,
+    "buildTime": 6,
+    "hp": 12,
+    "armor": "none",
+    "speed": 3.6,
+    "loco": "foot",
+    "sight": 5,
+    "weapons": [
+      "bite"
+    ],
+    "prereq": [
+      "kennel"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "detector": true,
+    "crushable": true,
+    "desc": "Kills infantry in one bite; detects spies."
+  },
+  "medic": {
+    "name": "Medic",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 800,
+    "buildTime": 12,
+    "hp": 80,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 3,
+    "weapons": [
+      "medkit"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "medic": true,
+    "crushable": true,
+    "desc": "Heals nearby infantry."
+  },
+  "mechanic": {
+    "name": "Mechanic",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 80,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 3,
+    "weapons": [
+      "wrench"
+    ],
+    "prereq": [
+      "barracks",
+      "depot"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "mechanic": true,
+    "tech": 3,
+    "crushable": true,
+    "desc": "Repairs vehicles in the field."
+  },
+  "spy": {
+    "name": "Spy",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 25,
+    "armor": "none",
+    "speed": 2.6,
+    "loco": "foot",
+    "sight": 5,
+    "prereq": [
+      "barracks",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "spy": true,
+    "tech": 3,
+    "crushable": true,
+    "desc": "Disguised infiltrator; reveals or disables enemy buildings."
+  },
+  "thief": {
+    "name": "Thief",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 25,
+    "armor": "none",
+    "speed": 2.6,
+    "loco": "foot",
+    "sight": 4,
+    "prereq": [
+      "barracks",
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "thief": true,
+    "tech": 5,
+    "crushable": true,
+    "desc": "Steals half the credits from an enemy refinery or silo."
+  },
+  "commando": {
+    "name": "Commando",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 1200,
+    "buildTime": 20,
+    "hp": 100,
+    "armor": "none",
+    "speed": 2.6,
+    "loco": "foot",
+    "sight": 5,
+    "weapons": [
+      "pistol",
+      "c4"
+    ],
+    "prereq": [
+      "barracks",
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "c4": true,
+    "hero": true,
+    "buildLimit": 1,
+    "tech": 7,
+    "crushable": true,
+    "desc": "Elite: one-shots infantry, plants C4 on structures."
+  },
+  "officer": {
+    "name": "Field Officer",
+    "class": "infantry",
+    "queue": "infantry",
+    "cost": 1200,
+    "buildTime": 20,
+    "hp": 120,
+    "armor": "none",
+    "speed": 2.4,
+    "loco": "foot",
+    "sight": 5,
+    "weapons": [
+      "smg",
+      "c4"
+    ],
+    "prereq": [
+      "barracks",
+      "techcenter"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "c4": true,
+    "hero": true,
+    "buildLimit": 1,
+    "tech": 7,
+    "crushable": true,
+    "desc": "Elite: submachine gun and demolition charges."
+  },
+  "oretruck": {
+    "name": "Ore Truck",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 1400,
+    "buildTime": 18,
+    "hp": 600,
+    "armor": "heavy",
+    "speed": 2.0,
+    "loco": "track",
+    "sight": 4,
+    "prereq": [
+      "factory",
+      "refinery"
+    ],
+    "harvester": {
+      "capacity": 20
+    },
+    "crushes": true,
+    "desc": "Harvests ore and gems; returns to the refinery."
+  },
+  "mcv": {
+    "name": "Mobile Construction Vehicle",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 2500,
+    "buildTime": 30,
+    "hp": 600,
+    "armor": "light",
+    "speed": 1.4,
+    "loco": "track",
+    "sight": 4,
+    "prereq": [
+      "factory",
+      "depot"
+    ],
+    "deploysTo": "conyard",
+    "tech": 4,
+    "crushes": true,
+    "desc": "Deploys into a Construction Yard."
+  },
+  "ranger": {
+    "name": "Scout Ranger",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 600,
+    "buildTime": 8,
+    "hp": 150,
+    "armor": "light",
+    "speed": 4.2,
+    "loco": "wheel",
+    "sight": 6,
+    "weapons": [
+      "mg"
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "desc": "Fast scout with a machine gun."
+  },
+  "apc": {
+    "name": "Armoured Personnel Carrier",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 800,
+    "buildTime": 10,
+    "hp": 200,
+    "armor": "heavy",
+    "speed": 3.6,
+    "loco": "track",
+    "sight": 5,
+    "weapons": [
+      "mg"
+    ],
+    "prereq": [
+      "factory",
+      "barracks"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "cargo": 5,
+    "crushes": true,
+    "desc": "Carries five infantry; light machine gun."
+  },
+  "lighttank": {
+    "name": "Light Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 700,
+    "buildTime": 10,
+    "hp": 300,
+    "armor": "heavy",
+    "speed": 3.0,
+    "loco": "track",
+    "sight": 4,
+    "weapons": [
+      "cannon25"
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "crushes": true,
+    "desc": "Fast, lightly armed tank."
+  },
+  "mediumtank": {
+    "name": "Medium Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 800,
+    "buildTime": 12,
+    "hp": 400,
+    "armor": "heavy",
+    "speed": 2.6,
+    "loco": "track",
+    "sight": 4,
+    "weapons": [
+      "cannon90"
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "crushes": true,
+    "desc": "Alliance main battle tank."
+  },
+  "heavytank": {
+    "name": "Heavy Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 950,
+    "buildTime": 14,
+    "hp": 400,
+    "armor": "heavy",
+    "speed": 2.2,
+    "loco": "track",
+    "sight": 4,
+    "weapons": [
+      "cannon105"
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "turret": true,
+    "crushes": true,
+    "desc": "Pact twin-barrel battle tank."
+  },
+  "kolossus": {
+    "name": "Kolossus Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 1700,
+    "buildTime": 22,
+    "hp": 600,
+    "armor": "heavy",
+    "speed": 1.6,
+    "loco": "track",
+    "sight": 4,
+    "weapons": [
+      "cannon120",
+      "mammothMissile"
+    ],
+    "prereq": [
+      "factory",
+      "depot"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "turret": true,
+    "crushes": true,
+    "tech": 5,
+    "desc": "Super-heavy tank with cannons and AA missiles; self-repairs to half."
+  },
+  "artillery": {
+    "name": "Artillery",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 75,
+    "armor": "light",
+    "speed": 2.2,
+    "loco": "track",
+    "sight": 5,
+    "weapons": [
+      "howitzer"
+    ],
+    "prereq": [
+      "factory",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "tech": 3,
+    "desc": "Long-range indirect fire; fragile."
+  },
+  "rocketlauncher": {
+    "name": "Rocket Launcher",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 700,
+    "buildTime": 12,
+    "hp": 150,
+    "armor": "light",
+    "speed": 2.4,
+    "loco": "wheel",
+    "sight": 5,
+    "weapons": [
+      "rocketV"
+    ],
+    "prereq": [
+      "factory",
+      "radar"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 3,
+    "desc": "Ballistic rocket truck; devastating against structures."
+  },
+  "jammer": {
+    "name": "Mobile Radar Jammer",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 110,
+    "armor": "light",
+    "speed": 3.0,
+    "loco": "wheel",
+    "sight": 5,
+    "prereq": [
+      "factory",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "jammer": 10,
+    "tech": 4,
+    "desc": "Disables enemy radar within range."
+  },
+  "mobilegap": {
+    "name": "Mobile Gap Generator",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 110,
+    "armor": "light",
+    "speed": 3.0,
+    "loco": "wheel",
+    "sight": 4,
+    "prereq": [
+      "factory",
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "gap": 4,
+    "tech": 6,
+    "desc": "Projects shroud around itself."
+  },
+  "minelayer": {
+    "name": "Minelayer",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 800,
+    "buildTime": 12,
+    "hp": 100,
+    "armor": "heavy",
+    "speed": 3.0,
+    "loco": "track",
+    "sight": 4,
+    "prereq": [
+      "factory",
+      "depot"
+    ],
+    "minelayer": true,
+    "tech": 4,
+    "desc": "Lays five mines; rearms at a Service Depot.",
+    "ammo": 5
+  },
+  "arctank": {
+    "name": "Arc Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 1500,
+    "buildTime": 20,
+    "hp": 400,
+    "armor": "heavy",
+    "speed": 2.4,
+    "loco": "track",
+    "sight": 4,
+    "weapons": [
+      "arcTank"
+    ],
+    "prereq": [
+      "factory",
+      "arctower"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 6,
+    "crushes": true,
+    "desc": "Mounted arc projector; ignores armour."
+  },
+  "phasetank": {
+    "name": "Phase Tank",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 2400,
+    "buildTime": 26,
+    "hp": 400,
+    "armor": "heavy",
+    "speed": 2.6,
+    "loco": "track",
+    "sight": 5,
+    "weapons": [
+      "maverick"
+    ],
+    "prereq": [
+      "factory",
+      "phasegate"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "tech": 8,
+    "desc": "Teleports itself anywhere on the map, then recharges.",
+    "phaseJump": 25
+  },
+  "demotruck": {
+    "name": "Demolition Truck",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 1500,
+    "buildTime": 20,
+    "hp": 110,
+    "armor": "light",
+    "speed": 3.0,
+    "loco": "wheel",
+    "sight": 4,
+    "weapons": [
+      "demoCharge"
+    ],
+    "prereq": [
+      "factory",
+      "missilesilo"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "suicide": true,
+    "tech": 8,
+    "desc": "Drives into the enemy and detonates a small nuclear charge."
+  },
+  "flaktruck": {
+    "name": "Flak Truck",
+    "class": "vehicle",
+    "queue": "vehicle",
+    "cost": 300,
+    "buildTime": 6,
+    "hp": 200,
+    "armor": "light",
+    "speed": 3.6,
+    "loco": "wheel",
+    "sight": 5,
+    "weapons": [
+      "flakTruck"
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "turret": true,
+    "desc": "Cheap mobile anti-air and anti-infantry flak."
+  },
+  "yak": {
+    "name": "Light Fighter",
+    "class": "aircraft",
+    "queue": "aircraft",
+    "cost": 800,
+    "buildTime": 12,
+    "hp": 60,
+    "armor": "light",
+    "speed": 7.0,
+    "loco": "air",
+    "sight": 6,
+    "weapons": [
+      "chaingun"
+    ],
+    "prereq": [
+      "airfield"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 3,
+    "desc": "Strafing fighter; rearms at an airfield.",
+    "ammo": 12
+  },
+  "mig": {
+    "name": "Interceptor",
+    "class": "aircraft",
+    "queue": "aircraft",
+    "cost": 1200,
+    "buildTime": 16,
+    "hp": 50,
+    "armor": "light",
+    "speed": 9.0,
+    "loco": "air",
+    "sight": 6,
+    "weapons": [
+      "maverick"
+    ],
+    "prereq": [
+      "airfield",
+      "radar"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 5,
+    "desc": "Fast jet with anti-armour missiles.",
+    "ammo": 6
+  },
+  "hind": {
+    "name": "Gunship",
+    "class": "aircraft",
+    "queue": "aircraft",
+    "cost": 1200,
+    "buildTime": 16,
+    "hp": 225,
+    "armor": "light",
+    "speed": 5.0,
+    "loco": "air",
+    "sight": 6,
+    "weapons": [
+      "chaingun"
+    ],
+    "prereq": [
+      "helipad"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "tech": 4,
+    "desc": "Heavy chaingun helicopter.",
+    "ammo": 24
+  },
+  "longbow": {
+    "name": "Attack Helicopter",
+    "class": "aircraft",
+    "queue": "aircraft",
+    "cost": 1200,
+    "buildTime": 16,
+    "hp": 225,
+    "armor": "light",
+    "speed": 5.6,
+    "loco": "air",
+    "sight": 6,
+    "weapons": [
+      "hellfire"
+    ],
+    "prereq": [
+      "helipad",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "tech": 4,
+    "desc": "Anti-armour missile helicopter.",
+    "ammo": 8
+  },
+  "transheli": {
+    "name": "Transport Helicopter",
+    "class": "aircraft",
+    "queue": "aircraft",
+    "cost": 900,
+    "buildTime": 14,
+    "hp": 90,
+    "armor": "light",
+    "speed": 5.0,
+    "loco": "air",
+    "sight": 5,
+    "prereq": [
+      "helipad"
+    ],
+    "cargo": 5,
+    "tech": 4,
+    "desc": "Carries five infantry anywhere."
+  },
+  "gunboat": {
+    "name": "Gunboat",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 200,
+    "armor": "heavy",
+    "speed": 3.6,
+    "loco": "naval",
+    "sight": 6,
+    "weapons": [
+      "naval5in",
+      "depthCharge"
+    ],
+    "prereq": [
+      "navalyard"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "detector": true,
+    "desc": "Light patrol craft; detects submarines."
+  },
+  "destroyer": {
+    "name": "Destroyer",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 1000,
+    "buildTime": 16,
+    "hp": 400,
+    "armor": "heavy",
+    "speed": 3.0,
+    "loco": "naval",
+    "sight": 6,
+    "weapons": [
+      "stinger",
+      "depthCharge"
+    ],
+    "prereq": [
+      "navalyard",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "detector": true,
+    "tech": 4,
+    "desc": "Anti-air and anti-submarine escort."
+  },
+  "cruiser": {
+    "name": "Cruiser",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 2000,
+    "buildTime": 28,
+    "hp": 700,
+    "armor": "heavy",
+    "speed": 2.0,
+    "loco": "naval",
+    "sight": 7,
+    "weapons": [
+      "naval8in"
+    ],
+    "prereq": [
+      "navalyard",
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "turret": true,
+    "tech": 7,
+    "desc": "Long-range shore bombardment."
+  },
+  "sub": {
+    "name": "Submarine",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 950,
+    "buildTime": 16,
+    "hp": 120,
+    "armor": "light",
+    "speed": 2.6,
+    "loco": "naval",
+    "sight": 5,
+    "weapons": [
+      "torpedo"
+    ],
+    "prereq": [
+      "subpen"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "cloaked": true,
+    "desc": "Submerged torpedo boat; surfaces to fire."
+  },
+  "missilesub": {
+    "name": "Missile Submarine",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 2000,
+    "buildTime": 28,
+    "hp": 200,
+    "armor": "light",
+    "speed": 2.4,
+    "loco": "naval",
+    "sight": 6,
+    "weapons": [
+      "cruiseMissile"
+    ],
+    "prereq": [
+      "subpen",
+      "techcenter"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "cloaked": true,
+    "tech": 7,
+    "desc": "Submerged missile platform for shore strikes."
+  },
+  "transport": {
+    "name": "Naval Transport",
+    "class": "ship",
+    "queue": "ship",
+    "cost": 700,
+    "buildTime": 12,
+    "hp": 350,
+    "armor": "heavy",
+    "speed": 3.0,
+    "loco": "naval",
+    "sight": 5,
+    "prereq": [
+      "navalyard"
+    ],
+    "cargo": 5,
+    "desc": "Carries five units across water."
+  }
+}

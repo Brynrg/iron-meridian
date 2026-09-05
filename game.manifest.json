@@ -1,0 +1,15 @@
+{
+  "slug": "iron-meridian",
+  "title": "Iron Meridian",
+  "description": "Cold-war alternate-history RTS built to parity with the 1996 Westwood classic: ore economy, construction-yard base building, two factions with full ground, air and naval rosters, superweapons, fog of war, 28-mission campaign, skirmish AI on 16 maps, saves, replays, and peer-to-peer lockstep multiplayer. Original factions, art, and audio.",
+  "framework": "vite-canvas2d",
+  "category": "strategy",
+  "supportsMobile": false,
+  "version": "1.0.0",
+  "emoji": "🪖",
+  "entry": "index.html",
+  "buildCommand": "npm run build",
+  "repo": "Brynrg/iron-meridian",
+  "multiplayer": "p2p",
+  "multiplayerProvider": "webrtc"
+}

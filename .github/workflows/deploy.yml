@@ -1,0 +1,47 @@
+name: Deploy to speedrungames.net
+
+# Every push to main auto-deploys this game to the portal. The slug is read
+# from game.manifest.json so this file needs no per-game editing. All deploy
+# logic lives in the portal's reusable workflow — never reimplement it here,
+# and never copy build output into the portal by hand.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      slug: ${{ steps.read.outputs.slug }}
+      skip: ${{ steps.read.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: |
+          SLUG="$(node -p "require('./game.manifest.json').slug")"
+          # Built from two parts so scaffold-time placeholder substitution can
+          # never rewrite this guard into "skip my own real slug".
+          PLACEHOLDER="$(printf '__%s__' SLUG)"
+          if [ -z "$SLUG" ] || [ "$SLUG" = "$PLACEHOLDER" ]; then
+            echo "::notice::game.manifest.json#slug is still the placeholder — skipping deploy. Set a real slug (or run \`pnpm new:game\`) to enable auto-deploy."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: meta
+    if: needs.meta.outputs.skip != 'true'
+    uses: Brynrg/speedrungames/.github/workflows/deploy-game.yml@main
+    with:
+      slug: ${{ needs.meta.outputs.slug }}
+      build-command: npm run build
+      dist-dir: dist
+      status: live
+    secrets:
+      SPEEDRUNGAMES_TOKEN: ${{ secrets.SPEEDRUNGAMES_TOKEN }}

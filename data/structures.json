@@ -1,0 +1,878 @@
+{
+  "conyard": {
+    "name": "Construction Yard",
+    "queue": "building",
+    "cost": 2500,
+    "buildTime": 30,
+    "hp": 1000,
+    "armor": "heavy",
+    "power": 0,
+    "footprint": [
+      3,
+      3
+    ],
+    "sight": 5,
+    "produces": [
+      "building",
+      "defense"
+    ],
+    "sellable": true,
+    "desc": "Builds all structures. Sell to recover an MCV."
+  },
+  "power": {
+    "name": "Power Plant",
+    "queue": "building",
+    "cost": 300,
+    "buildTime": 8,
+    "hp": 400,
+    "armor": "wood",
+    "power": 100,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "conyard"
+    ],
+    "desc": "Supplies 100 power."
+  },
+  "apower": {
+    "name": "Advanced Power Plant",
+    "queue": "building",
+    "cost": 500,
+    "buildTime": 12,
+    "hp": 700,
+    "armor": "wood",
+    "power": 200,
+    "footprint": [
+      2,
+      3
+    ],
+    "prereq": [
+      "conyard",
+      "radar"
+    ],
+    "tech": 3,
+    "desc": "Supplies 200 power."
+  },
+  "refinery": {
+    "name": "Ore Refinery",
+    "queue": "building",
+    "cost": 2000,
+    "buildTime": 20,
+    "hp": 900,
+    "armor": "wood",
+    "power": -30,
+    "footprint": [
+      3,
+      3
+    ],
+    "sight": 4,
+    "prereq": [
+      "power"
+    ],
+    "storage": 2000,
+    "refinery": true,
+    "exit": [
+      0,
+      3
+    ],
+    "desc": "Processes ore into credits; comes with an Ore Truck."
+  },
+  "silo": {
+    "name": "Ore Silo",
+    "queue": "building",
+    "cost": 150,
+    "buildTime": 4,
+    "hp": 300,
+    "armor": "wood",
+    "power": -10,
+    "footprint": [
+      1,
+      1
+    ],
+    "prereq": [
+      "refinery"
+    ],
+    "storage": 1500,
+    "baseNormal": false,
+    "desc": "Stores 1500 credits of ore."
+  },
+  "barracks": {
+    "name": "Barracks",
+    "queue": "building",
+    "cost": 300,
+    "buildTime": 10,
+    "hp": 400,
+    "armor": "wood",
+    "power": -20,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "power"
+    ],
+    "produces": [
+      "infantry"
+    ],
+    "exit": [
+      1,
+      2
+    ],
+    "desc": "Trains infantry."
+  },
+  "kennel": {
+    "name": "Kennel",
+    "queue": "building",
+    "cost": 200,
+    "buildTime": 6,
+    "hp": 200,
+    "armor": "wood",
+    "power": -10,
+    "footprint": [
+      1,
+      1
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "produces": [
+      "infantry"
+    ],
+    "exit": [
+      0,
+      1
+    ],
+    "baseNormal": false,
+    "desc": "Breeds attack dogs."
+  },
+  "factory": {
+    "name": "War Factory",
+    "queue": "building",
+    "cost": 2000,
+    "buildTime": 22,
+    "hp": 1000,
+    "armor": "wood",
+    "power": -30,
+    "footprint": [
+      3,
+      2
+    ],
+    "prereq": [
+      "refinery"
+    ],
+    "produces": [
+      "vehicle"
+    ],
+    "exit": [
+      1,
+      2
+    ],
+    "desc": "Builds vehicles."
+  },
+  "radar": {
+    "name": "Radar Dome",
+    "queue": "building",
+    "cost": 1000,
+    "buildTime": 14,
+    "hp": 1000,
+    "armor": "wood",
+    "power": -40,
+    "footprint": [
+      2,
+      2
+    ],
+    "sight": 10,
+    "prereq": [
+      "refinery"
+    ],
+    "radar": true,
+    "needsPower": true,
+    "tech": 2,
+    "desc": "Enables the minimap and mid-tier units.",
+    "superweapon": "recon",
+    "superweaponFactions": [
+      "pact"
+    ],
+    "chargeTime": 180
+  },
+  "depot": {
+    "name": "Service Depot",
+    "queue": "building",
+    "cost": 1200,
+    "buildTime": 14,
+    "hp": 800,
+    "armor": "wood",
+    "power": -30,
+    "footprint": [
+      3,
+      3
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "repairs": true,
+    "tech": 3,
+    "desc": "Repairs vehicles parked on it; unlocks the MCV."
+  },
+  "techcenter": {
+    "name": "Technology Centre",
+    "queue": "building",
+    "cost": 1500,
+    "buildTime": 18,
+    "hp": 400,
+    "armor": "wood",
+    "power": -100,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "radar",
+      "factory"
+    ],
+    "tech": 5,
+    "desc": "Unlocks advanced weapons.",
+    "superweapon": "gps",
+    "superweaponFactions": [
+      "alliance"
+    ],
+    "chargeTime": 420
+  },
+  "helipad": {
+    "name": "Helipad",
+    "queue": "building",
+    "cost": 1500,
+    "buildTime": 16,
+    "hp": 800,
+    "armor": "wood",
+    "power": -10,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "radar"
+    ],
+    "produces": [
+      "aircraft"
+    ],
+    "helipad": true,
+    "exit": [
+      0,
+      0
+    ],
+    "tech": 4,
+    "desc": "Builds and rearms helicopters."
+  },
+  "airfield": {
+    "name": "Airfield",
+    "queue": "building",
+    "cost": 600,
+    "buildTime": 12,
+    "hp": 600,
+    "armor": "wood",
+    "power": -20,
+    "footprint": [
+      3,
+      2
+    ],
+    "prereq": [
+      "radar"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "produces": [
+      "aircraft"
+    ],
+    "helipad": true,
+    "exit": [
+      1,
+      0
+    ],
+    "tech": 3,
+    "desc": "Builds and rearms fixed-wing aircraft.",
+    "superweapon": "paradrop",
+    "chargeTime": 240
+  },
+  "navalyard": {
+    "name": "Naval Yard",
+    "queue": "building",
+    "cost": 650,
+    "buildTime": 12,
+    "hp": 1000,
+    "armor": "wood",
+    "power": -30,
+    "footprint": [
+      3,
+      3
+    ],
+    "prereq": [
+      "power"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "produces": [
+      "ship"
+    ],
+    "exit": [
+      1,
+      3
+    ],
+    "tech": 2,
+    "desc": "Builds ships. Must be placed on a shoreline."
+  },
+  "subpen": {
+    "name": "Submarine Pen",
+    "queue": "building",
+    "cost": 650,
+    "buildTime": 12,
+    "hp": 1000,
+    "armor": "wood",
+    "power": -30,
+    "footprint": [
+      3,
+      3
+    ],
+    "prereq": [
+      "power"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "produces": [
+      "ship"
+    ],
+    "exit": [
+      1,
+      3
+    ],
+    "tech": 2,
+    "desc": "Builds submarines. Must be placed on a shoreline."
+  },
+  "pillbox": {
+    "name": "Pillbox",
+    "queue": "defense",
+    "cost": 400,
+    "buildTime": 8,
+    "hp": 400,
+    "armor": "concrete",
+    "power": -15,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 5,
+    "weapons": [
+      "vulcan"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "baseNormal": false,
+    "desc": "Fortified machine-gun nest."
+  },
+  "camopillbox": {
+    "name": "Camouflaged Pillbox",
+    "queue": "defense",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 600,
+    "armor": "concrete",
+    "power": -15,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 5,
+    "weapons": [
+      "vulcan"
+    ],
+    "prereq": [
+      "barracks",
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "tech": 3,
+    "baseNormal": false,
+    "desc": "Hidden until it fires."
+  },
+  "turret": {
+    "name": "Gun Turret",
+    "queue": "defense",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 400,
+    "armor": "heavy",
+    "power": -40,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 6,
+    "weapons": [
+      "cannon105"
+    ],
+    "turret": true,
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "tech": 2,
+    "baseNormal": false,
+    "desc": "Anti-tank cannon emplacement."
+  },
+  "aagun": {
+    "name": "AA Gun",
+    "queue": "defense",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 400,
+    "armor": "heavy",
+    "power": -50,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 7,
+    "weapons": [
+      "flakGun"
+    ],
+    "turret": true,
+    "prereq": [
+      "radar"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "needsPower": true,
+    "tech": 3,
+    "baseNormal": false,
+    "desc": "Flak battery; anti-air only."
+  },
+  "flametower": {
+    "name": "Flame Tower",
+    "queue": "defense",
+    "cost": 600,
+    "buildTime": 10,
+    "hp": 400,
+    "armor": "heavy",
+    "power": -20,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 5,
+    "weapons": [
+      "flameTower"
+    ],
+    "prereq": [
+      "barracks"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "baseNormal": false,
+    "desc": "Short-range flame defence."
+  },
+  "arctower": {
+    "name": "Arc Tower",
+    "queue": "defense",
+    "cost": 1500,
+    "buildTime": 18,
+    "hp": 400,
+    "armor": "heavy",
+    "power": -150,
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 8,
+    "weapons": [
+      "arcTower"
+    ],
+    "prereq": [
+      "factory",
+      "radar"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "needsPower": true,
+    "tech": 4,
+    "baseNormal": false,
+    "desc": "Lightning defence; needs full power."
+  },
+  "samsite": {
+    "name": "SAM Site",
+    "queue": "defense",
+    "cost": 750,
+    "buildTime": 10,
+    "hp": 400,
+    "armor": "heavy",
+    "power": -40,
+    "footprint": [
+      2,
+      1
+    ],
+    "sight": 7,
+    "weapons": [
+      "sam"
+    ],
+    "turret": true,
+    "prereq": [
+      "radar"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "needsPower": true,
+    "tech": 3,
+    "baseNormal": false,
+    "desc": "Missile battery; anti-air only."
+  },
+  "sandbag": {
+    "name": "Sandbag Wall",
+    "queue": "defense",
+    "cost": 25,
+    "buildTime": 1,
+    "hp": 100,
+    "armor": "wood",
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 1,
+    "prereq": [
+      "conyard"
+    ],
+    "wall": true,
+    "sellable": false,
+    "capturable": false,
+    "baseNormal": false,
+    "desc": "Blocks infantry and light vehicles."
+  },
+  "wire": {
+    "name": "Wire Fence",
+    "queue": "defense",
+    "cost": 25,
+    "buildTime": 1,
+    "hp": 100,
+    "armor": "wood",
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 1,
+    "prereq": [
+      "conyard"
+    ],
+    "wall": true,
+    "sellable": false,
+    "capturable": false,
+    "baseNormal": false,
+    "desc": "Cheap perimeter fence."
+  },
+  "concrete": {
+    "name": "Concrete Wall",
+    "queue": "defense",
+    "cost": 100,
+    "buildTime": 2,
+    "hp": 500,
+    "armor": "concrete",
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 1,
+    "prereq": [
+      "conyard"
+    ],
+    "wall": true,
+    "sellable": false,
+    "capturable": false,
+    "tech": 2,
+    "baseNormal": false,
+    "desc": "Stops tanks and most shells."
+  },
+  "gapgen": {
+    "name": "Gap Generator",
+    "queue": "defense",
+    "cost": 500,
+    "buildTime": 10,
+    "hp": 500,
+    "armor": "wood",
+    "power": -60,
+    "footprint": [
+      1,
+      2
+    ],
+    "sight": 4,
+    "prereq": [
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "gap": 6,
+    "needsPower": true,
+    "tech": 6,
+    "baseNormal": false,
+    "desc": "Re-shrouds the area around it for enemies."
+  },
+  "phasegate": {
+    "name": "Phase Gate",
+    "queue": "building",
+    "cost": 2800,
+    "buildTime": 30,
+    "hp": 400,
+    "armor": "wood",
+    "power": -200,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "techcenter"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "superweapon": "phase",
+    "chargeTime": 240,
+    "needsPower": true,
+    "buildLimit": 1,
+    "tech": 8,
+    "desc": "Teleports a group of vehicles anywhere for 20 seconds."
+  },
+  "aegis": {
+    "name": "Aegis Field Generator",
+    "queue": "building",
+    "cost": 2800,
+    "buildTime": 30,
+    "hp": 400,
+    "armor": "wood",
+    "power": -200,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "techcenter"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "superweapon": "aegis",
+    "chargeTime": 240,
+    "needsPower": true,
+    "buildLimit": 1,
+    "tech": 8,
+    "desc": "Makes a group of units invulnerable for 20 seconds."
+  },
+  "missilesilo": {
+    "name": "Missile Silo",
+    "queue": "building",
+    "cost": 2500,
+    "buildTime": 30,
+    "hp": 400,
+    "armor": "wood",
+    "power": -150,
+    "footprint": [
+      2,
+      1
+    ],
+    "prereq": [
+      "techcenter"
+    ],
+    "factions": [
+      "pact"
+    ],
+    "superweapon": "nuke",
+    "chargeTime": 600,
+    "needsPower": true,
+    "buildLimit": 1,
+    "tech": 9,
+    "desc": "Launches an atomic missile every ten minutes."
+  },
+  "fakefactory": {
+    "name": "Fake War Factory",
+    "queue": "defense",
+    "cost": 50,
+    "buildTime": 3,
+    "hp": 100,
+    "armor": "wood",
+    "power": 0,
+    "footprint": [
+      3,
+      2
+    ],
+    "prereq": [
+      "factory"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "fake": "factory",
+    "tech": 2,
+    "baseNormal": false,
+    "desc": "Decoy that looks like a War Factory."
+  },
+  "fakeconyard": {
+    "name": "Fake Construction Yard",
+    "queue": "defense",
+    "cost": 50,
+    "buildTime": 3,
+    "hp": 100,
+    "armor": "wood",
+    "power": 0,
+    "footprint": [
+      3,
+      3
+    ],
+    "prereq": [
+      "conyard"
+    ],
+    "factions": [
+      "alliance"
+    ],
+    "fake": "conyard",
+    "tech": 2,
+    "baseNormal": false,
+    "desc": "Decoy that looks like a Construction Yard."
+  },
+  "oilderrick": {
+    "name": "Oil Derrick",
+    "queue": "building",
+    "cost": 0,
+    "buildTime": 1,
+    "hp": 600,
+    "armor": "wood",
+    "power": 0,
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "none"
+    ],
+    "factions": [],
+    "storage": 0,
+    "desc": "Neutral; capture for a steady trickle of credits."
+  },
+  "civ1": {
+    "name": "Farmhouse",
+    "queue": "building",
+    "cost": 0,
+    "buildTime": 1,
+    "hp": 300,
+    "armor": "wood",
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "none"
+    ],
+    "factions": [],
+    "capturable": false,
+    "sellable": false,
+    "desc": "Civilian building."
+  },
+  "civ2": {
+    "name": "Church",
+    "queue": "building",
+    "cost": 0,
+    "buildTime": 1,
+    "hp": 400,
+    "armor": "wood",
+    "footprint": [
+      2,
+      3
+    ],
+    "prereq": [
+      "none"
+    ],
+    "factions": [],
+    "capturable": false,
+    "sellable": false,
+    "desc": "Civilian building."
+  },
+  "hospital": {
+    "name": "Field Hospital",
+    "queue": "building",
+    "cost": 0,
+    "buildTime": 1,
+    "hp": 500,
+    "armor": "wood",
+    "footprint": [
+      2,
+      2
+    ],
+    "prereq": [
+      "none"
+    ],
+    "factions": [],
+    "desc": "Neutral; capture to slowly heal all your infantry."
+  },
+  "gate": {
+    "name": "Gate",
+    "queue": "defense",
+    "cost": 250,
+    "buildTime": 4,
+    "hp": 600,
+    "armor": "concrete",
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 2,
+    "prereq": [
+      "concrete"
+    ],
+    "gate": true,
+    "sellable": false,
+    "capturable": false,
+    "tech": 2,
+    "baseNormal": false,
+    "desc": "Wall segment that opens for your own units."
+  },
+  "mine": {
+    "name": "Land Mine",
+    "queue": "defense",
+    "cost": 0,
+    "buildTime": 1,
+    "hp": 50,
+    "armor": "none",
+    "footprint": [
+      1,
+      1
+    ],
+    "sight": 1,
+    "prereq": [
+      "none"
+    ],
+    "factions": [],
+    "mine": true,
+    "weapons": [
+      "mineBlast"
+    ],
+    "sellable": false,
+    "capturable": false,
+    "baseNormal": false,
+    "desc": "Hidden; detonates under enemy ground units."
+  }
+}

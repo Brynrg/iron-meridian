@@ -1,0 +1,17 @@
+{
+  "startingCredits": 10000,
+  "oreValue": 25,
+  "gemValue": 50,
+  "harvestTicksPerBale": 6,
+  "unloadTicksPerBale": 2,
+  "oreGrowthSeconds": 30,
+  "baseRadius": 5,
+  "sellRefund": 0.5,
+  "repairCostFraction": 0.3,
+  "repairHpPerSecond": 40,
+  "lowPowerBuildMultiplier": 2.5,
+  "conYardBuildSpeedBonus": 0.0,
+  "crushDamage": 1000,
+  "captureThreshold": 1.0,
+  "shortGame": true
+}
