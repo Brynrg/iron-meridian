@@ -102,7 +102,7 @@ function loadSettingsColourblind(): boolean {
 }
 
 function campaignMenu(): void {
-  setOverlay(showCampaign(app, (spec) => setOverlay(showBriefing(app, spec, () => startMission(spec), campaignMenu)), mainMenu));
+  setOverlay(showCampaign(app, (spec) => setOverlay(showBriefing(app, spec, (d) => startMission(spec, d), campaignMenu)), mainMenu));
 }
 
 function optionsOverlay(onClose: () => void): void {
@@ -149,10 +149,13 @@ function startSkirmish(setup: SkirmishSetup): void {
   });
 }
 
-function startMission(spec: MissionSpec): void {
+let campaignDifficulty: "easy" | "normal" | "hard" = "normal";
+
+function startMission(spec: MissionSpec, difficulty: "easy" | "normal" | "hard" = campaignDifficulty): void {
+  campaignDifficulty = difficulty;
   const map = generateMap({ ...spec.map });
   const def = buildMission(spec, map);
-  const state = createMission(rules, map, def);
+  const state = createMission(rules, map, def, difficulty);
   runGame({ state, mapName: `mission:${spec.id}`, mission: spec, replayMeta: { version: 1, seed: state.seed, setups: def.players, options: state.options, mission: spec.id } });
 }
 
@@ -361,8 +364,9 @@ function runGame(start: GameStart): void {
       showEndScreen(app, won, me?.stats ?? { built: 0, lost: 0, kills: 0, harvested: 0 }, seconds, {
         onMenu: mainMenu,
         onContinue: clearOverlay,
-        onNext: won && next ? () => setOverlay(showBriefing(app, next, () => startMission(next), campaignMenu)) : undefined,
+        onNext: won && next ? () => setOverlay(showBriefing(app, next, (d) => startMission(next, d), campaignMenu)) : undefined,
         onRetry: !won && start.mission ? () => startMission(start.mission as MissionSpec) : undefined,
+        onSkip: !won && start.mission && next ? () => { markComplete((start.mission as MissionSpec).id); setOverlay(showBriefing(app, next, (d) => startMission(next, d), campaignMenu)); } : undefined,
       }),
     );
   };

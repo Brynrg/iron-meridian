@@ -8,7 +8,7 @@ import type { Command, GameOptions, SimState } from "./types";
 import type { MapData } from "./map";
 import type { Rules } from "../data/schemas";
 import { tileToWorldCenter } from "./coords";
-import { runAi, aiObserve } from "./systems/ai";
+import { runAi, aiObserve, MISSION_GOALS } from "./systems/ai";
 import { runCommands } from "./systems/command";
 import { runProduction } from "./systems/production";
 import { runEconomy } from "./systems/economy";
@@ -18,24 +18,40 @@ import { runCombat, runSuicide } from "./systems/combat";
 import { runFog } from "./systems/fog";
 import { runVictory } from "./systems/victory";
 import { runSpecial, seedNeutrals } from "./systems/special";
-import { createMissionRuntime, runMission, seedMission, type MissionDef } from "./mission";
+import { countMissionEvents, createMissionRuntime, runMission, seedMission, type MissionDef } from "./mission";
 
 /** Missions register their definitions here so a loaded save can find its script. */
 export const MISSION_REGISTRY = new Map<string, MissionDef>();
 
 export function registerMission(def: MissionDef): void {
   MISSION_REGISTRY.set(def.id, def);
+  MISSION_GOALS.set(def.id, def.objectives.filter((o): o is Extract<typeof o, { kind: "buildType" }> => o.kind === "buildType").map((o) => ({ id: o.id, type: o.type })));
 }
 
 /** Build a campaign mission: scripted actors, optional starting units, runtime attached. */
-export function createMission(rules: Rules, map: MapData, def: MissionDef): SimState {
+export type CampaignDifficulty = "easy" | "normal" | "hard";
+
+const AI_STEPS: Array<"easy" | "normal" | "hard"> = ["easy", "normal", "hard"];
+
+export function createMission(rules: Rules, map: MapData, def: MissionDef, campaign: CampaignDifficulty = "normal"): SimState {
   registerMission(def);
   const options: GameOptions = { ...DEFAULT_OPTIONS, techLevel: def.techLevel ?? 10, ...(def.options ?? {}) };
-  const setups: PlayerSetup[] = def.players.map((p) => ({ name: p.name, faction: p.faction, color: p.color, isAI: p.isAI, difficulty: p.difficulty, team: p.team }));
+  const step = campaign === "easy" ? -1 : campaign === "hard" ? 1 : 0;
+  const setups: PlayerSetup[] = def.players.map((p, i) => ({
+    name: p.name,
+    faction: p.faction,
+    color: p.color,
+    isAI: p.isAI,
+    difficulty: i > 0 && p.difficulty ? AI_STEPS[Math.max(0, Math.min(2, AI_STEPS.indexOf(p.difficulty) + step))] : p.difficulty,
+    team: p.team,
+  }));
   const state = createSim(rules, map, setups, options, def.index * 7919 + def.act * 131);
+  const enemyCredits = campaign === "easy" ? 0.35 : campaign === "hard" ? 1.5 : 1;
+  const playerCredits = campaign === "easy" ? 1.75 : campaign === "hard" ? 0.8 : 1;
   def.players.forEach((p, i) => {
     const pl = state.players[i];
-    if (pl && p.credits !== undefined) pl.credits = p.credits;
+    if (pl && p.credits !== undefined) pl.credits = Math.round(p.credits * (i === 0 ? playerCredits : enemyCredits));
+    if (pl?.ai && i > 0) pl.ai.attackWaveAt = 20 * (campaign === "easy" ? 900 : campaign === "hard" ? 300 : 420); // garrison holds 15 / 7 / 5 minutes
   });
   if (!def.noStartingUnits) {
     const start = map.starts[0];
@@ -111,6 +127,7 @@ export function refreshActorList(state: SimState): void {
 }
 
 export function stepSim(state: SimState, commands: Command[]): void {
+  if (state.mission) countMissionEvents(state, state.mission);
   state.events.length = 0;
   refreshActorList(state);
   const aiCommands: Command[] = [];

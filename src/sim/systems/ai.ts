@@ -39,6 +39,9 @@ const VEHICLE_MIX: Record<string, string[]> = {
   pact: ["heavytank", "heavytank", "flaktruck", "rocketlauncher", "heavytank", "kolossus", "arctank"],
 };
 
+/** Mission build goals registered by the mission factory: mission id -> [{ objective id, type }]. */
+export const MISSION_GOALS = new Map<string, Array<{ id: string; type: string }>>();
+
 export function runAi(state: SimState, out: Command[]): void {
   for (const p of state.players) {
     if (!p.isAI || p.defeated || !p.ai) continue;
@@ -65,6 +68,22 @@ function think(state: SimState, p: Player, out: Command[]): void {
       if (mcv.order.kind === "idle") out.push({ player: p.id, kind: "deploy", actors: [mcv.id] });
       // If deploy failed (blocked), shuffle a little.
       if (state.tick % 60 === 0) out.push({ player: p.id, kind: "move", actors: [mcv.id], x: mcv.x + (nextInt(state.rng, 3) - 1) * LEPTONS_PER_CELL * 2, y: mcv.y + (nextInt(state.rng, 3) - 1) * LEPTONS_PER_CELL * 2, queue: false });
+      return;
+    }
+    // No yard and no MCV: this is a strike force. Escorts hunt; heroes follow once the guns are down.
+    if (state.tick >= mem.attackWaveAt && state.tick % 100 === 0) {
+      const heroes = units.filter((a) => unitDef(state, a.type)?.hero);
+      const escort = units.filter((a) => !unitDef(state, a.type)?.hero && ((unitDef(state, a.type)?.weapons.length ?? 0) > 0 || unitDef(state, a.type)?.engineer));
+      const lead = escort[0] ?? heroes[0];
+      const target = lead ? pickTarget(state, p, lead) : null;
+      if (target && escort.length) out.push({ player: p.id, kind: "attackMove", actors: escort.map((a) => a.id), x: target.x, y: target.y, queue: false });
+      if (target && heroes.length) {
+        const gunsNear = state.actorList.filter((a) => a.owner >= 0 && state.players[a.owner]?.team !== p.team && ((a.kind === "unit" && (unitDef(state, a.type)?.weapons.length ?? 0) > 0) || (a.kind === "structure" && (structDef(state, a.type)?.weapons.length ?? 0) > 0)) && Math.hypot(a.x - target.x, a.y - target.y) < cellsToLeptons(9)).length;
+        const escortNear = escort.filter((a) => Math.hypot(a.x - target.x, a.y - target.y) < cellsToLeptons(8)).length;
+        // The hero goes in only once the escort holds the area and no gun covers the target.
+        if ((gunsNear === 0 && (escortNear >= 2 || escort.length === 0)) ) out.push({ player: p.id, kind: "attack", actors: heroes.map((a) => a.id), target: target.id, queue: false });
+        else out.push({ player: p.id, kind: "guard", actors: heroes.map((a) => a.id) }); // hold until the escort has done its work
+      }
     }
     return;
   }
@@ -114,6 +133,11 @@ function think(state: SimState, p: Player, out: Command[]): void {
       order = ["power", "refinery", "barracks", "power", "factory", "radar", air, ...order.filter((t) => t !== air && t !== navy)];
     }
     order = order.filter((t) => !mem.blocked.includes(t));
+    // Mission goals first: any active buildType objective for a structure jumps the queue.
+    if (state.mission && p.id === 0) {
+      const def = MISSION_GOALS.get(state.mission.id);
+      for (const goal of def ?? []) if (state.mission.status[goal.id] === "active" && state.rules.structures[goal.type] && !mem.blocked.includes(goal.type)) order = [goal.type, ...order.filter((t) => t !== goal.type)];
+    }
     const canBuild = buildableTypes(state, p.id, "building");
     const canDef = buildableTypes(state, p.id, "defense");
     let pick: string | null = null;
@@ -149,7 +173,7 @@ function think(state: SimState, p: Player, out: Command[]): void {
   }
 
   // 3. Repair damaged buildings when affordable.
-  if (p.credits > 500) {
+  if (p.credits > 500 && p.difficulty !== "easy") {
     for (const s of structures) if (!s.repairing && s.hp < s.maxHp * 0.7) out.push({ player: p.id, kind: "repair", actor: s.id });
   }
 
@@ -159,12 +183,27 @@ function think(state: SimState, p: Player, out: Command[]): void {
   const wantHarvesters = Math.min(6, refineries * 2);
   const vq = p.queues.vehicle;
   const iq = p.queues.infantry;
+  // Mission goals for units (e.g. "field two Attack Helicopters") and defensive structures.
+  if (state.mission && p.id === 0) {
+    for (const goal of MISSION_GOALS.get(state.mission.id) ?? []) {
+      const sd = structDef(state, goal.type);
+      if (sd && sd.queue === "defense" && state.mission.status[goal.id] === "active" && dq.items.length === 0 && !dq.ready && buildableTypes(state, p.id, "defense").includes(goal.type)) out.push({ player: p.id, kind: "queue", queue: "defense", type: goal.type });
+      const ud = unitDef(state, goal.type);
+      if (!ud || state.mission.status[goal.id] !== "active") continue;
+      const q = p.queues[ud.queue];
+      if (q.items.length === 0 && buildableTypes(state, p.id, ud.queue).includes(goal.type)) out.push({ player: p.id, kind: "queue", queue: ud.queue, type: goal.type });
+    }
+  }
   if (vq.items.length === 0 && producersOf(state, p.id, "vehicle").length) {
     const can = buildableTypes(state, p.id, "vehicle");
     let type: string | null = null;
     if (harvesters.length < wantHarvesters && can.includes("oretruck")) type = "oretruck";
     else {
-      const mix = (VEHICLE_MIX[p.faction] ?? []).filter((t) => can.includes(t));
+      let mix = (VEHICLE_MIX[p.faction] ?? []).filter((t) => can.includes(t));
+      // Fortified enemy (2+ long-range defences): half the production becomes artillery.
+      const longDefences = state.actorList.filter((a) => a.kind === "structure" && a.owner >= 0 && state.players[a.owner]?.team !== p.team && (structDef(state, a.type)?.weapons ?? []).some((w) => (state.rules.weapons[w]?.range ?? 0) >= 6)).length;
+      const siege = p.faction === "pact" ? "rocketlauncher" : "artillery";
+      if (longDefences >= 2 && can.includes(siege)) mix = [...mix, ...mix.map(() => siege)];
       if (mix.length) type = mix[nextInt(state.rng, mix.length)] as string;
     }
     if (type && (type === "oretruck" || p.credits > 600)) out.push({ player: p.id, kind: "queue", queue: "vehicle", type });
@@ -183,6 +222,14 @@ function think(state: SimState, p: Player, out: Command[]): void {
     if (can.length && units.filter((a) => a.loco === "air").length < 4) out.push({ player: p.id, kind: "queue", queue: "aircraft", type: can[nextInt(state.rng, can.length)] as string });
   }
 
+  // Aircraft with full ammunition strike the nearest enemy structure on their own.
+  if (state.tick % 150 === 0) {
+    const ready = units.filter((a) => a.loco === "air" && (unitDef(state, a.type)?.weapons.length ?? 0) > 0 && a.ammo >= (unitDef(state, a.type)?.ammo ?? 0) && (a.order.kind === "idle" || a.order.kind === "guard"));
+    const lead = ready[0];
+    const target = lead ? pickTarget(state, p, lead) : null;
+    if (target && ready.length) out.push({ player: p.id, kind: "attackMove", actors: ready.map((a) => a.id), x: target.x, y: target.y, queue: false });
+  }
+
   // Navy.
   const sq = p.queues.ship;
   if (sq.items.length === 0 && producersOf(state, p.id, "ship").length && p.credits > 1500) {
@@ -192,7 +239,8 @@ function think(state: SimState, p: Player, out: Command[]): void {
   // Ships hunt on their own: attack-move toward the enemy along water.
   if (state.tick % 200 === 0) {
     const ships = units.filter((a) => a.loco === "naval" && a.order.kind === "idle" && (unitDef(state, a.type)?.weapons.length ?? 0) > 0);
-    const target = pickTarget(state, p, conyard);
+    const lead = ships[0];
+    const target = lead ? pickShoreTarget(state, p, lead) ?? pickTarget(state, p, conyard) : null;
     if (ships.length && target) out.push({ player: p.id, kind: "attackMove", actors: ships.map((a) => a.id), x: target.x, y: target.y, queue: false });
   }
 
@@ -216,6 +264,24 @@ function think(state: SimState, p: Player, out: Command[]): void {
     return structs <= 4 && armed <= 3;
   });
   if (crippled) threshold = Math.min(threshold, 3);
+  // Value check: do not throw a small force at a fortified enemy.
+  const value = (owner: number, includeDefenses: boolean): number => {
+    let v = 0;
+    for (const a of state.actorList) {
+      if (a.owner !== owner) continue;
+      if (a.kind === "unit") {
+        const d = unitDef(state, a.type);
+        if (d && d.weapons.length > 0 && !a.harvester) v += d.cost;
+      } else if (includeDefenses && a.kind === "structure") {
+        const d = structDef(state, a.type);
+        if (d && d.weapons.length > 0 && !d.mine) v += d.cost;
+      }
+    }
+    return v;
+  };
+  const myValue = value(p.id, false);
+  const enemyValue = enemies.reduce((sum, q) => sum + value(q.id, true), 0);
+  const strongEnough = crippled || myValue >= enemyValue * (p.difficulty === "hard" ? 1.0 : p.difficulty === "easy" ? 1.6 : 1.2) + (p.difficulty === "easy" ? 2000 : 1000);
   const underAttack = state.tick - mem.lastBaseAttackTick < 20 * 15 && mem.targetX >= 0;
   const nearBase = underAttack && Math.hypot(mem.targetX - conyard.x, mem.targetY - conyard.y) < cellsToLeptons(18);
 
@@ -227,12 +293,11 @@ function think(state: SimState, p: Player, out: Command[]): void {
     // Gather idle army at the rally point.
     const idle = army.filter((a) => a.order.kind === "idle" && Math.hypot(a.x - mem.rallyX, a.y - mem.rallyY) > cellsToLeptons(4));
     if (idle.length && state.tick % 60 === 0) out.push({ player: p.id, kind: "move", actors: idle.map((a) => a.id), x: mem.rallyX, y: mem.rallyY, queue: false });
-    if (army.length >= threshold) {
+    if (army.length >= threshold && strongEnough && state.tick >= mem.attackWaveAt) {
       const target = pickTarget(state, p, conyard);
       if (target) {
         mem.attacking = true;
-        mem.attackWaveAt = state.tick;
-        out.push({ player: p.id, kind: "attackMove", actors: army.map((a) => a.id), x: target.x, y: target.y, queue: false });
+        orderAttack(state, p, army, target, out);
         if (air.length) out.push({ player: p.id, kind: "attackMove", actors: air.map((a) => a.id), x: target.x, y: target.y, queue: false });
       }
     }
@@ -243,9 +308,39 @@ function think(state: SimState, p: Player, out: Command[]): void {
       const lead = idle[0] ?? army[0];
       const target = lead ? pickTarget(state, p, lead) : null;
       if (!target) mem.attacking = false;
-      else if (idle.length) out.push({ player: p.id, kind: "attackMove", actors: idle.map((a) => a.id), x: target.x, y: target.y, queue: false });
+      else if (idle.length) orderAttack(state, p, idle, target, out);
     }
     if (army.length < Math.max(3, threshold / 3)) mem.attacking = false;
+  }
+
+  // 5b. Specialists: engineers capture the nearest capturable building (neutral first), spies infiltrate radar/tech.
+  if (state.tick % 80 === 0) {
+    for (const u of units) {
+      const d = unitDef(state, u.type);
+      if (!d || u.order.kind !== "idle" && u.order.kind !== "guard") continue;
+      if (d.engineer) {
+        let best: Actor | null = null;
+        let bestD = Infinity;
+        for (const s of state.actorList) {
+          if (s.kind !== "structure" || s.owner === p.id) continue;
+          const sd = structDef(state, s.type);
+          if (!sd?.capturable || sd.wall || sd.mine) continue;
+          if (s.owner >= 0 && state.players[s.owner]?.team === p.team) continue;
+          const dist = Math.hypot(s.x - u.x, s.y - u.y) * (s.owner < 0 ? 0.5 : 1);
+          // Only walk in once no enemy gun is covering the target.
+          const covered = state.actorList.some((g) => g.owner >= 0 && state.players[g.owner]?.team !== p.team && ((g.kind === "unit" && (unitDef(state, g.type)?.weapons.length ?? 0) > 0) || (g.kind === "structure" && (structDef(state, g.type)?.weapons.length ?? 0) > 0)) && Math.hypot(g.x - s.x, g.y - s.y) < cellsToLeptons(6));
+          if (covered) continue;
+          if (dist < bestD && dist < cellsToLeptons(60)) {
+            bestD = dist;
+            best = s;
+          }
+        }
+        if (best) out.push({ player: p.id, kind: "attack", actors: [u.id], target: best.id, queue: false });
+      } else if (d.spy || d.thief) {
+        const target = state.actorList.find((s) => s.kind === "structure" && s.owner >= 0 && state.players[s.owner]?.team !== p.team && (d.thief ? (structDef(state, s.type)?.storage ?? 0) > 0 : structDef(state, s.type)?.radar || structDef(state, s.type)?.superweapon));
+        if (target) out.push({ player: p.id, kind: "attack", actors: [u.id], target: target.id, queue: false });
+      }
+    }
   }
 
   // 6. Superweapons: fire at the biggest enemy cluster (their conyard).
@@ -388,6 +483,56 @@ function pickTarget(state: SimState, p: Player, from: Actor, preferYard = false)
     }
     if (score < bestScore) {
       bestScore = score;
+      best = a;
+    }
+  }
+  return best;
+}
+
+/**
+ * Order an attack on `target`. If the target is a long-range defence and we field
+ * siege units, only the siege units close in; everyone else holds 9 cells short.
+ */
+function orderAttack(state: SimState, p: Player, army: Actor[], target: Actor, out: Command[]): void {
+  const isLongDefence = target.kind === "structure" && (structDef(state, target.type)?.weapons ?? []).some((w) => (state.rules.weapons[w]?.range ?? 0) >= 6);
+  const siegeTypes = ["artillery", "rocketlauncher", "cruiser", "missilesub"];
+  const siege = army.filter((a) => siegeTypes.includes(a.type));
+  const rest = army.filter((a) => !siegeTypes.includes(a.type));
+  if (isLongDefence && siege.length >= 2) {
+    out.push({ player: p.id, kind: "attackMove", actors: siege.map((a) => a.id), x: target.x, y: target.y, queue: false });
+    const lead = rest[0] ?? siege[0];
+    if (lead && rest.length) {
+      const dx = lead.x - target.x;
+      const dy = lead.y - target.y;
+      const d = Math.max(1, Math.hypot(dx, dy));
+      const hold = cellsToLeptons(9);
+      const hx = d > hold ? Math.round(target.x + (dx / d) * hold) : lead.x;
+      const hy = d > hold ? Math.round(target.y + (dy / d) * hold) : lead.y;
+      out.push({ player: p.id, kind: "attackMove", actors: rest.map((a) => a.id), x: hx, y: hy, queue: false });
+    }
+    return;
+  }
+  out.push({ player: p.id, kind: "attackMove", actors: army.map((a) => a.id), x: target.x, y: target.y, queue: false });
+}
+
+/** Nearest enemy structure that stands within 3 cells of water (reachable by ships' guns). */
+function pickShoreTarget(state: SimState, p: Player, from: Actor): Actor | null {
+  const m = state.map;
+  let best: Actor | null = null;
+  let bestD = Infinity;
+  for (const a of state.actorList) {
+    if (a.kind !== "structure" || a.owner < 0 || state.players[a.owner]?.team === p.team) continue;
+    let shore = false;
+    for (let y = a.ty - 3; y <= a.ty + a.h + 2 && !shore; y++)
+      for (let x = a.tx - 3; x <= a.tx + a.w + 2; x++)
+        if (inBounds(m, x, y) && m.terrain[cellIndex(m, x, y)] === Terrain.Water) {
+          shore = true;
+          break;
+        }
+    if (!shore) continue;
+    const d = Math.hypot(a.x - from.x, a.y - from.y);
+    if (d < bestD) {
+      bestD = d;
       best = a;
     }
   }

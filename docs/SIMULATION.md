@@ -71,3 +71,12 @@ The analyzer flags three types of anomalies:
 
 ## Baseline vs fixed comparison
 Run the harness before and after a balance or AI change and diff the two `analyze.mjs` outputs. Games are deterministic per seed, so any difference is caused by the change, not by noise.
+
+## Campaign playthrough
+
+`npm run sim:campaign [-- --only a01,p03] [--minutes 45] [--difficulty hard]` plays every
+mission headlessly with the skirmish AI standing in for the human and reports win / lose /
+timeout per mission with the final objective statuses (`scripts/out/campaign-run.json`).
+The stand-in is goal-directed for `buildType` objectives, captures with engineers, sends spies,
+and hunts with strike forces, but it cannot micro-manage, so a loss here means "hard for an
+AI", not "impossible"; a timeout usually means an objective the stand-in cannot pursue.

@@ -29,6 +29,7 @@ export type Objective = {
   | { kind: "survive"; seconds: number }
   | { kind: "protect"; type: string; owner?: number } // fails if all such actors die
   | { kind: "credits"; amount: number }
+  | { kind: "harvest"; amount: number } // total ore/gems harvested
   | { kind: "killCount"; count: number }
   | { kind: "flag" } // completed only by a trigger action
 );
@@ -148,15 +149,8 @@ function inArea(x: number, y: number, area: Area): boolean {
   return Math.hypot(x - tileToWorldCenter(area.tx), y - tileToWorldCenter(area.ty)) <= cellsToLeptons(area.r);
 }
 
-/** Evaluate objectives and triggers for this tick. Returns commands to inject. */
-export function runMission(state: SimState, def: MissionDef, rt: MissionRuntime, out: Command[]): void {
-  if (state.finished) return;
-  const tick = state.tick;
-  const secs = (tick - rt.startTick) / 20;
-  const human = 0;
-  const p0 = state.players[human];
-  if (!p0) return;
-  // Track kills/captures via counters updated from events emitted last tick.
+/** Fold last tick's death events into the mission counters. Call before events are cleared. */
+export function countMissionEvents(state: SimState, rt: MissionRuntime): void {
   for (const ev of state.events) {
     if (ev.kind === "died" && ev.player >= 0 && ev.kind2 !== "projectile") {
       const key = `died:${ev.player}:${ev.type}`;
@@ -165,6 +159,16 @@ export function runMission(state: SimState, def: MissionDef, rt: MissionRuntime,
       rt.counters[all] = (rt.counters[all] ?? 0) + 1;
     }
   }
+}
+
+/** Evaluate objectives and triggers for this tick. Returns commands to inject. */
+export function runMission(state: SimState, def: MissionDef, rt: MissionRuntime, out: Command[]): void {
+  if (state.finished) return;
+  const tick = state.tick;
+  const secs = (tick - rt.startTick) / 20;
+  const human = 0;
+  const p0 = state.players[human];
+  if (!p0) return;
 
   // Objectives.
   for (const o of def.objectives) {
@@ -212,6 +216,9 @@ export function runMission(state: SimState, def: MissionDef, rt: MissionRuntime,
       case "credits":
         done = p0.credits >= o.amount;
         break;
+      case "harvest":
+        done = p0.stats.harvested >= o.amount;
+        break;
       case "killCount":
         done = p0.stats.kills >= o.count;
         break;
@@ -248,6 +255,11 @@ export function runMission(state: SimState, def: MissionDef, rt: MissionRuntime,
     }
   }
 
+  // "Protect" objectives are satisfied once every other required objective is done.
+  const others = def.objectives.filter((o) => !o.optional && o.kind !== "protect");
+  if (others.length && others.every((o) => rt.status[o.id] === "done")) {
+    for (const o of def.objectives) if (o.kind === "protect" && rt.status[o.id] === "active") rt.status[o.id] = "done";
+  }
   // Win when every required objective is done and none failed.
   const required = def.objectives.filter((o) => !o.optional);
   if (required.length && required.every((o) => rt.status[o.id] === "done")) winMission(state);

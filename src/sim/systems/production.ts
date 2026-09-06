@@ -29,7 +29,7 @@ export function runProduction(state: SimState): void {
       if (lowPower) ticks *= g.lowPowerBuildMultiplier;
       // Extra producers speed the queue (classic: each additional factory helps a little).
       ticks /= 1 + (producers.length - 1) * 0.25;
-      if (p.isAI) ticks /= p.difficulty === "hard" ? 1.25 : p.difficulty === "easy" ? 0.8 : 1;
+      if (p.isAI) ticks /= p.difficulty === "hard" ? 1.25 : p.difficulty === "easy" ? 0.5 : 1;
       const step = 1 / Math.max(1, ticks);
       const nextProgress = Math.min(1, item.progress + step);
       const owed = Math.ceil(def.cost * nextProgress) - item.paid;

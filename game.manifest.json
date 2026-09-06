@@ -5,7 +5,7 @@
   "framework": "vite-canvas2d",
   "category": "strategy",
   "supportsMobile": false,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "emoji": "🪖",
   "entry": "index.html",
   "buildCommand": "npm run build",

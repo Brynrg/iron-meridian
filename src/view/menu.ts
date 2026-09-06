@@ -158,7 +158,7 @@ export function showCampaign(parent: HTMLElement, onPick: (spec: MissionSpec) =>
   return root;
 }
 
-export function showBriefing(parent: HTMLElement, spec: MissionSpec, onStart: () => void, onBack: () => void): HTMLElement {
+export function showBriefing(parent: HTMLElement, spec: MissionSpec, onStart: (difficulty: "easy" | "normal" | "hard") => void, onBack: () => void): HTMLElement {
   const root = document.createElement("div");
   root.className = "menu";
   root.innerHTML = `
@@ -166,6 +166,7 @@ export function showBriefing(parent: HTMLElement, spec: MissionSpec, onStart: ()
       <h2>${spec.faction === "alliance" ? "Meridian Alliance" : "Ural Pact"} · Act ${spec.act} · Mission ${spec.index}</h2>
       <h1 style="font-size:24px;letter-spacing:3px">${spec.title.toUpperCase()}</h1>
       <div class="briefing">${spec.briefing.map((l) => `> ${l}`).join("\n\n")}</div>
+      <div class="menu-grid" style="margin-top:12px"><label>Difficulty <select id="b-diff"><option value="easy">Easy — more credits, slower enemy</option><option value="normal" selected>Normal</option><option value="hard">Hard — richer, faster enemy</option></select></label></div>
       <div class="menu-actions">
         <button id="b-back">Back</button>
         <button id="b-start" class="primary">Begin mission</button>
@@ -173,7 +174,7 @@ export function showBriefing(parent: HTMLElement, spec: MissionSpec, onStart: ()
     </div>`;
   parent.appendChild(root);
   (root.querySelector("#b-back") as HTMLButtonElement).addEventListener("click", onBack);
-  (root.querySelector("#b-start") as HTMLButtonElement).addEventListener("click", onStart);
+  (root.querySelector("#b-start") as HTMLButtonElement).addEventListener("click", () => onStart((root.querySelector("#b-diff") as HTMLSelectElement).value as "easy" | "normal" | "hard"));
   return root;
 }
 
@@ -263,7 +264,7 @@ export function showControls(parent: HTMLElement, onClose: () => void): HTMLElem
   return root;
 }
 
-export function showEndScreen(parent: HTMLElement, won: boolean, stats: { built: number; lost: number; kills: number; harvested: number }, seconds: number, h: { onMenu: () => void; onContinue: () => void; onNext?: () => void; onRetry?: () => void }): HTMLElement {
+export function showEndScreen(parent: HTMLElement, won: boolean, stats: { built: number; lost: number; kills: number; harvested: number }, seconds: number, h: { onMenu: () => void; onContinue: () => void; onNext?: () => void; onRetry?: () => void; onSkip?: () => void }): HTMLElement {
   const root = document.createElement("div");
   root.className = "menu overlay";
   const mm = Math.floor(seconds / 60);
@@ -281,6 +282,7 @@ export function showEndScreen(parent: HTMLElement, won: boolean, stats: { built:
       <div class="menu-actions">
         ${h.onNext ? '<button id="e-next" class="primary">Next mission</button>' : ""}
         ${h.onRetry ? '<button id="e-retry" class="primary">Retry</button>' : ""}
+        ${h.onSkip ? '<button id="e-skip">Skip mission</button>' : ""}
         <button id="e-menu" ${h.onNext || h.onRetry ? "" : 'class="primary"'}>Main menu</button>
         <button id="e-cont">Keep watching</button>
       </div>
@@ -290,6 +292,7 @@ export function showEndScreen(parent: HTMLElement, won: boolean, stats: { built:
   (root.querySelector("#e-cont") as HTMLButtonElement).addEventListener("click", h.onContinue);
   if (h.onNext) (root.querySelector("#e-next") as HTMLButtonElement).addEventListener("click", h.onNext);
   if (h.onRetry) (root.querySelector("#e-retry") as HTMLButtonElement).addEventListener("click", h.onRetry);
+  if (h.onSkip) (root.querySelector("#e-skip") as HTMLButtonElement).addEventListener("click", h.onSkip);
   return root;
 }
 

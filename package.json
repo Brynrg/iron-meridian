@@ -1,6 +1,6 @@
 {
   "name": "iron-meridian",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +13,10 @@
     "verify": "npm run typecheck && npm run lint:paths && npm run lint:sim && npm run test:unit",
     "test": "playwright test",
     "deploy:portal": "npm run build && node scripts/deploy-portal.mjs",
-    "lint:sim": "node scripts/check-sim-purity.mjs"
+    "lint:sim": "node scripts/check-sim-purity.mjs",
+    "sim:matrix": "vite-node scripts/simulate.ts",
+    "sim:campaign": "vite-node scripts/campaign-run.ts",
+    "sim:analyze": "node scripts/analyze.mjs"
   },
   "dependencies": {
     "speedrungames-sdk": "github:Brynrg/speedrungames-sdk#v0.1.0",
