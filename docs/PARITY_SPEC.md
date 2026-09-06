@@ -120,7 +120,7 @@ Transport (Pact).
 |---|---|---|
 | G1 | Skirmish setup: map pool, players, factions, colours, teams, starting credits, tech level, unit count, shroud, crates, short game | ☑ (16-map pool + random, factions, difficulty, teams, credits, tech, escort size, shroud, crates, ore growth, short game, seed) |
 | G2 | Skirmish AI: build order, base layout, expansion, harvester defence, attack waves, air/naval use, superweapon use; Easy/Normal/Hard | ☑ (three difficulties: build order, expansion, repair, defence, waves, air, navy, superweapons) |
-| G3 | Campaign: 14 Alliance + 14 Pact missions with briefings, objectives, triggers, timers, reinforcements, scripted events | ☑ (14 Alliance + 14 Pact missions with briefings, objectives, triggers, timers, reinforcements) |
+| G3 | Campaign: 14 Alliance + 14 Pact missions with briefings, objectives, triggers, timers, reinforcements, scripted events | ☑ (28 missions; Easy/Normal/Hard select; headless stand-in wins 23/28 on Easy, see `docs/SIMULATION.md`; skip-after-loss keeps the campaign traversable) |
 | G4 | Mission select, difficulty, score screen (kills/losses/built/time), continue after victory | ☑ (campaign select with unlocks, briefing, score screen, next/retry) |
 | G5 | 16+ skirmish maps 1v1 → 4v4, plus map format documented for hand authoring | ☑ (16 maps: 2 authored ASCII maps + 14 named generator presets; format documented in `src/sim/maps.ts`) |
 

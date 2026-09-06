@@ -64,6 +64,20 @@ started from occupied cells; unplaceable buildings retried forever; late-game wa
 grew past reachable army sizes; AI bases sealed their own producers' exits; River Crossing
 ore was too small. Anomalies dropped from 10/43 games to 3/43 (all of one class, documented in the report).
 
+## Campaign viability pass (2026-09-05, evening)
+`npm run sim:campaign -- --campaign easy|normal|hard` plays all 28 missions with the skirmish AI as
+the human. Baseline 2/28; after fixes 23/28 on Easy (a07 spy, a08 arc-tower choke, a10, a14, p09 still
+lose), 11/28 on Normal. Fixes: protect objectives could never complete; mission kill counters read
+events after they were cleared; a03 timer wired to fail; a05/p05 targets absent; enemy garrisons
+attacked at tick 0 (now a 15/7/5-minute grace by difficulty); campaign difficulty scaling (credits,
+AI step, grace); AI gains: hunt without a yard, value-based attack sizing, engineer capture, spy
+infiltration, shore targeting for ships, goal-directed builds for mission objectives, siege split
+(artillery leads against long-range defences), hero hold-back, aircraft self-strikes; a04 harvest
+objective, a11/p07 outposts, a12 capture-or-destroy with 25-minute window, p04 neutral derricks,
+p05 coastline map, a08 two towers, a14 tier-2 reserve. A loss screen now offers "Skip mission" so
+the campaign is traversable start to end regardless. Local `code` role drafted the harness, an AI
+review, docs, and a siege diff (the diff was corrupt and rewritten by hand).
+
 ## Exact next action
 1. Playtest: a human should play A1–A3 and P1–P3 and log balance notes; then the AI on
    Hard for 20 minutes.
